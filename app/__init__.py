@@ -6,7 +6,7 @@ import os
 # from app.config import LocalDevelopmentConfig /mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/templates
 
 db = SQLAlchemy()
-DB_NAME = "myticketDB.sqlite3"
+DB_NAME = "database.sqlite3"
 
 
 def create_app():

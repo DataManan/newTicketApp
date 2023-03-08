@@ -52,10 +52,17 @@ movies = [
 
 @controllers.route('/')
 def index():
-
     return render_template('index.html.jinja2', SHOWS=movies)
 
 
 @controllers.route("/book_tickets/<show_id>")
 def book_tickets(show_id):
     return render_template("bookshow.html.jinja2", SHOWS=movies, show_id=show_id)
+
+@controllers.route("/login")
+def user_login():
+    return render_template("login_page.html.jinja2")
+
+@controllers.route("/signup")
+def user_signup():
+    return render_template("signup_page.html.jinja2")

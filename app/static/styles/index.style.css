@@ -48,7 +48,14 @@ General
         font-family: 'PT Sans', sans-serif;
     }
 
-                
+    
+/* ////////////////
+Header
+///////// */
+.header .btn{
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
 /* //////////////
 Cover Image
 /////////////// */

@@ -1,11 +1,16 @@
+autopep8==2.0.2
 click==8.1.3
 Flask==2.2.3
 Flask-Login==0.6.2
 Flask-SQLAlchemy==3.0.3
+-e git+https://github.com/wtforms/flask-wtf@7e65c3a00ee21ecc7d8134fd3b4d2ef1d7e21970#egg=Flask_WTF
 greenlet==2.0.2
 itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
+pycodestyle==2.10.0
 SQLAlchemy==2.0.5.post1
+tomli==2.0.1
 typing_extensions==4.5.0
 Werkzeug==2.2.3
+WTForms==3.0.1
