@@ -23,7 +23,7 @@
         <div class="col-3">
           {% for SHOW in SHOWS %} {% if SHOW.show_id == show_id %}
           <img
-            src="../static/images/{{ SHOW.poster }}"
+            src="{{ SHOW.poster }}"
             alt="{{ SHOW.title }}"
             class="card-img-top show--poster"
           />

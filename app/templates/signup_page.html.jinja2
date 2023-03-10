@@ -12,27 +12,41 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../static/styles/base.style.css" />
-    <link rel="stylesheet" href="../static/styles/usersign.style.css">
+    <link rel="stylesheet" href="../static/styles/usersign.style.css" />
   </head>
   <body>
     <!-- <h1>this is signup page</h1> -->
     <div class="container">
-
-      <form class="form-signin">
+      <form class="form-signin col-3" method="POST" action="/signup">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
+        <div class="row">
+          <div class="col">
+            <label for="inputFirstName" class="sr-only m-1">First Name</label>
+            <label for="inputLasttName" class="sr-only mb-1">Last Name</label>
+            <label for="inputUsername" class="sr-only mb-1">Username</label>
+            <label for="email" class="sr-only mb-1">Email</label>
+            <label for="inputPassword" class="sr-only mb-1">Password</label>
+          </div>
+          <div class="col p-1">
+            {{ form.hidden_tag() }}
 
-    </div> <!-- /container -->
+            {{ form.first_name }}
+
+            {{ form.last_name }}
+
+            {{ form.username }}
+
+            {{ form.email }}
+
+            {{ form.password }}
+          </div>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" href="/">
+          Sign Up
+        </button>
+      </form>
+    </div>
+    <!-- /container -->
 
     <!-- Script -->
     <script

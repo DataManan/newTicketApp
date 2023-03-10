@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 import os
+from flask_login import LOGIN_MESSAGE, LoginManager
 # from app.config import LocalDevelopmentConfig /mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/templates
 
 db = SQLAlchemy()
@@ -13,15 +14,29 @@ def create_app():
 
     app = Flask(__name__)
     
+    app.config['SECRET_KEY'] = "THISWASSUPPOSEDTOBEASECRET"
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/database.sqlite3"
     db.init_app(app)
     from .controllers import controllers
+    from .auth import auth
 
     app.register_blueprint(controllers, prefix='/')
+    app.register_blueprint(auth, prefix='/')
 
     from .models import User
     app.app_context().push()
     create_database(app)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.user_login'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+
+
 
     return app
 

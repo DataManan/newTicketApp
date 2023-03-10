@@ -43,7 +43,7 @@ movies = [
     },
     {
         "show_id": "wf2023",
-        "poster": "wakanda_forever.jpg",
+        "poster": "https://m.media-amazon.com/images/M/MV5BNTM4NjIxNmEtYWE5NS00NDczLTkyNWQtYThhNmQyZGQzMjM0XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_FMjpg_UX1000_.jpg",
         "title": "Wakanda Forever",
         "tags": ["action", "drama", "crime"],
         "description": "The people of Wakanda fight to protect their home from intervening world powers as they mourn the death of King T'Challa."
@@ -58,11 +58,3 @@ def index():
 @controllers.route("/book_tickets/<show_id>")
 def book_tickets(show_id):
     return render_template("bookshow.html.jinja2", SHOWS=movies, show_id=show_id)
-
-@controllers.route("/login")
-def user_login():
-    return render_template("login_page.html.jinja2")
-
-@controllers.route("/signup")
-def user_signup():
-    return render_template("signup_page.html.jinja2")

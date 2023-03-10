@@ -9,7 +9,10 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
+    username = db.Column(db.String(150), nullable=False)
 
+    def get_id(self):
+        return self.user_id
 
 class Shows(db.Model):
     __tablename__ = "shows"

@@ -12,27 +12,29 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../static/styles/base.style.css" />
-    <link rel="stylesheet" href="../static/styles/usersign.style.css">
+    <link rel="stylesheet" href="../static/styles/usersign.style.css" />
   </head>
   <body>
-    
-     <div class="container">
-
-      <form class="form-signin">
+    <div class="container">
+      <form class="form-signin" method="POST" action="/login">
         <h2 class="form-signin-heading">Please Log in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+        {{ form.hidden_tag() }}
+        <label for="inputUsername" class="sr-only"> Username </label>
+        {{ form.username }}
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        {{ form.password }}
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="remember-me"> Remember me
+            {{ form.remember }}
+            Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+          Log in
+        </button>
       </form>
-
-    </div> <!-- /container -->
+    </div>
+    <!-- /container -->
 
     <!-- Script -->
     <script
