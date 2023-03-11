@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return self.user_id
 
+
 class Shows(db.Model):
     __tablename__ = "shows"
     show_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -25,3 +26,33 @@ class Shows(db.Model):
     cast = db.Column(db.String)
     poster_link = db.Column(db.String)
 
+
+class Admin(db.Model):
+    __tablename__ = "admin"
+    admin_id = db.Column(db.String(80), primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+
+
+class Venues(db.Model):
+    __tablename__ = "venues"
+    venue_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    venue_name = db.Column(db.String(150), unique=True, nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String(150), nullable=False)
+    venue_tags = db.Column(db.String)
+
+
+class Shows_in_Venues(db.Model):
+    __tablename__ = "shows_in_venues"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date = db.Column(db.String(150), nullable=False)
+    show_id = db.Column(db.Integer, db.ForeignKey(
+        'shows.show_id'), nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey(
+        'venues.venue_id'), nullable=False)
+    
+    shows = db.relationship(
+        'shows', backref=db.backref('shows_in_venues', lazy=True))
+    venues = db.relationship(
+        'venues', backref=db.backref('shows_in_venues', lazy=True))
