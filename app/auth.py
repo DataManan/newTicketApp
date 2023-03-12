@@ -15,7 +15,9 @@ auth = Blueprint('auth', __name__)
 
 # login manager
 # login_manager = LoginManager()
-# login_manager = 
+# login_manager =
+
+
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[
                            InputRequired(), Length(min=4, max=16)])

@@ -47,12 +47,8 @@ class Shows_in_Venues(db.Model):
     __tablename__ = "shows_in_venues"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     date = db.Column(db.String(150), nullable=False)
-    show_id = db.Column(db.Integer, db.ForeignKey(
-        'shows.show_id'), nullable=False)
-    venue_id = db.Column(db.Integer, db.ForeignKey(
-        'venues.venue_id'), nullable=False)
-    
-    shows = db.relationship(
-        'shows', backref=db.backref('shows_in_venues', lazy=True))
-    venues = db.relationship(
-        'venues', backref=db.backref('shows_in_venues', lazy=True))
+
+    show_id = db.Column(db.Integer, db.ForeignKey('shows.show_id'), nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey('venues.venue_id'), nullable=False)
+    show = db.relationship('Shows', backref=db.backref('shows_in_venues', lazy=True))
+    venue = db.relationship('Venues', backref=db.backref('shows_in_venues', lazy=True))
