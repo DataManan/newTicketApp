@@ -75,14 +75,15 @@ venue management
 ///////////////// */
 
 div.venue--cont {
-    background: var(--clr-primary-2);
+    background: var(--clr-primary-5);
     padding: 0 8rem;
-    margin: 1rem auto;
+    margin: 0rem auto;
+    border: 2rem solid var(--clr-primary-2);
 
 }
 
 .venue__heading {
-    color: var(--clr-primary-5);
+    color: var(--clr-primary-3);
     font-weight: var(--w-heavy);
     text-align: center;
     font-style: oblique;
@@ -94,20 +95,27 @@ div.venue--cont {
     margin: 2rem auto;
     padding: 1rem;
     text-align: center;
+    background: linear-gradient(-45deg, var(--clr-primary-3), var(--clr-primary-2));
+    color: var(--clr-primary-5);
 }
 
 .add--card {
     margin: 2rem auto;
     padding: 1rem;
     text-align: center;
+    /* background: yellow; */
 }
 
-.add--card .bi-plus-lg,
-.add--card .bi-plus-lg:active {
-    font-size: 3.5rem;
-    color: var(--clr-primary-3);
-    background: var(--clr-primary-5);
-    border-radius: 50rem;
+.venue__add .bi-plus-lg,
+.venue__add .bi-plus-lg:active {
+    font-size: 5rem;
+    color: var(--clr-primary-5);
+    background: var(--clr-primary-2);
+    margin: 5.5rem auto 0 auto;
+    border-radius: 500px;
+}
+.venue__add{
+    font-size: 1.5rem;
 }
 
 .venue__controls .btn {
@@ -118,5 +126,6 @@ div.venue--cont {
 }
 
 .add--card .bi-plus-lg:hover {
-    box-shadow: 1px 1px 50px var(--clr-primary-3);
+    box-shadow: 1px 1px 50px var(--clr-primary-2);
+    transform: scale(1.25);
 }

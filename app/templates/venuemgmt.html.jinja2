@@ -32,18 +32,20 @@
           </a>
         </div>
         <div class="m-2">
-          <button class="btn">Logout</button>
+          <button class="btn btn-light">Logout</button>
         </div>
       </nav>
     </div>
-    <div class="container venue--cont">
+    <div class="container-fluid venue--cont">
       <h4 class="display-5 venue__heading">
         Venues Manager
       </h4>
       <div class="row">
         <div class="add--card" style="max-width: 18rem">
-          <button class="btn bi bi-plus-lg" venue__add">
-            <!-- <i class="bi bi-plus venue__add"></i> -->
+          <button class="btn venue__add">
+            <i class="bi bi-plus-lg"></i>
+            <br/>
+            Add Venue
           </button>
         </div>
         {% for i in range(10) %}
@@ -53,8 +55,7 @@
               {{"from venue model"}}
             </h5>
             <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
+              {{"Some quick information about Venues"}}
             </p>
             <span class="venue__controls">
             <button class="btn btn-primary">Add Show</button>
