@@ -44,6 +44,9 @@ General
     --w-regular: 500;
 }
 
+body{
+    margin: 0;
+}
 /* container */
 .container {
     font-family: 'PT Sans', sans-serif;
@@ -57,7 +60,18 @@ Header
     margin-right: 0.5rem;
     margin-left: 0.5rem;
 }
+/* navbar */
+.nav--block {
+    padding: 0;
+}
 
+.nav--block .navbar-brand {
+    font-size: 2rem;
+    font-weight: var(--w-heavy);
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+
+}
 /* //////////////
 Cover Image
 /////////////// */

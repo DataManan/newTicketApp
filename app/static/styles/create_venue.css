@@ -1,0 +1,100 @@
+/* //////////
+resoucess
+
+    color: rgba(217, 50, 80, 1);
+
+    color: rgba(115, 39, 67, 1);
+
+    color: rgba(3, 15, 38, 1);
+
+    color: rgba(242, 87, 87, 1);
+
+    color: rgba(242, 242, 242, 1);
+ 
+*/
+
+/* //////////
+reset
+//////////// */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* //////////
+General
+////////////// */
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+
+/* root */
+:root {
+    font-family: 'PT Sans', sans-serif;
+    --clr-primary-5: #f2f2f2;
+    --clr-primary-4: #f25757;
+    --clr-primary-3: #030f26;
+    --clr-primary-2: #732743;
+    --clr-primary-1: #d93250;
+    --clr-sec-1: #FF3D3D;
+
+    /* font weights */
+    --w-light: 300;
+    --w-heavy: 700;
+    --w-regular: 500;
+    font-size: 20px;
+}
+
+/* container */
+.container {
+    font-family: 'PT Sans', sans-serif;
+}
+
+
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+    font-family: 'PT Sans', sans-serif;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

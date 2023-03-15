@@ -89,6 +89,7 @@ div.venue--cont {
     font-style: oblique;
     line-height: 1;
     margin: 1rem auto;
+    font-size: 3rem;
 }
 
 .venue__card {
@@ -127,5 +128,4 @@ div.venue--cont {
 
 .add--card .bi-plus-lg:hover {
     box-shadow: 1px 1px 50px var(--clr-primary-2);
-    transform: scale(1.25);
 }

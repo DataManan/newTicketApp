@@ -17,6 +17,14 @@
   <body>
     <!-- <h1>this is signup page</h1> -->
     <div class="container">
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <ul class="flash-messages">
+        {% for message in messages %}
+        <li class="{{ message[1] }}">{{ message[0] }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %} {% endwith %}
+
       <form class="form-signin col-3" method="POST" action="/signup">
         <h2 class="form-signin-heading">Please sign in</h2>
         <div class="row">

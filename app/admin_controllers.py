@@ -1,30 +1,42 @@
 from crypt import methods
 from dataclasses import dataclass
-from tokenize import String
-from flask import Blueprint, render_template, url_for, redirect, current_app
+from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from . import db
-from flask_admin import Admin
 from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import InputRequired, Email, Length
-from .models import Venues
+from .models import Venues, Shows, Shows_in_Venues
 
-admin_controls = Blueprint('admin_controllers', __name__)
-
+admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
+# url_prefix='/admin'
+bootstrap = Bootstrap()
 
 class AddVenue(FlaskForm):
-    venue_name = StringField('venue name', validators=[
-                             InputRequired(), Length(min=3, max=256)])
-    cpacity = IntegerField('capacity', validators=[InputRequired()])
-    location = StringField('location', validators=[
-                           InputRequired(), Length(min=8, max=256)])
+    venue_name = StringField('venue name', validators=[InputRequired(), Length(min=3, max=256)])
+
+    capacity = IntegerField('capacity', validators=[InputRequired()])
+    location = StringField('location', validators=[InputRequired(), Length(min=8, max=256)])
     tags = StringField('tags', validators=[InputRequired()])
 
+class AddShow(FlaskForm):
+    show_name = StringField('Show Name', validators=[InputRequired(), Length(min=3, max=256)])
+    release_date = StringField('Release Date', validators=[InputRequired(), Length(min=3, max=256)])
+    rating = IntegerField('Ratings', validators=[InputRequired()])
+    tags = StringField('Tags', validators=[InputRequired(), Length(min=3, max=256)])
+    show_descp = StringField('Show Description', validators=[InputRequired(), Length(min=3, max=1024)])
+    cast = StringField('Cast')
+    poster_link = StringField('Poster Link')
+ 
+@admin_controls.route("/", methods=['GET', 'POST'])
+def adminhome():
+    return render_template("admin/admin_index.html.jinja2")
 
-@admin_controls.route("/venue_mgmt")
-def venues():
-    
-    return render_template("venuemgmt.html.jinja2")
+
+@admin_controls.route("/venue_mgmt", methods=['GET', 'POST'])
+def venue_mgmt():
+    return render_template("admin/venuemgmt.html.jinja2")
+
 
 
 @admin_controls.route('/create_venue', methods=['GET', 'POST'])
@@ -32,13 +44,44 @@ def create_venue():
     add_venue = AddVenue()
     if add_venue.validate_on_submit():
         new_venue = Venues(
-            venue_name = add_venue.venue_name.data,
-            capacity = add_venue.capacity.data,
-            location = add_venue.location.data,
-            venue_tags = add_venue.tags.data
+            venue_name=add_venue.venue_name.data,
+            capacity=add_venue.capacity.data,
+            location=add_venue.location.data,
+            venue_tags=add_venue.tags.data
         )
         db.session.add(new_venue)
         db.session.commit()
 
-        return redirect(url_for('admin_controls.venues'))
-    return render_template('add_venue.html.jinja2', form=add_venue)
+        flash('Venue created successfully!')
+
+
+        return redirect(url_for('admin_controllers.venue_mgmt'))
+
+    return render_template('admin/addvenueform.html.jinja2', form=add_venue)
+
+
+@admin_controls.route("/show_mgmt", methods=['GET', 'POST'])
+def show_mgmt():
+    shows = Shows.query.all()
+    return render_template("admin/showmgmt.html.jinja2", shows=shows)
+
+
+
+@admin_controls.route("/add_show", methods=['GET', 'POST'])
+def add_show():
+    addshow_form = AddShow()
+    if addshow_form.validate_on_submit():
+        new_show = Shows(
+            show_name=addshow_form.show_name.data,
+            release_date=addshow_form.release_date.data,
+            rating=addshow_form.rating.data,
+            tags=addshow_form.tags.data,
+            show_description=addshow_form.show_descp.data,
+            cast=addshow_form.cast.data,
+            poster_link=addshow_form.poster_link.data
+        )
+        db.session.add(new_show)
+        db.session.commit()
+        return redirect(url_for("admin_controllers.show_mgmt"))
+    return render_template("admin/addshowform.html.jinja2", form=addshow_form)
+

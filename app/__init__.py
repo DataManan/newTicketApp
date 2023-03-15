@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 import os
 from flask_login import LoginManager
-from flask_admin import Admin
+# from .admin_controllers import admin
 # from app.config import LocalDevelopmentConfig /mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/templates
 
 db = SQLAlchemy()
@@ -20,11 +20,11 @@ def create_app():
     db.init_app(app)
     from .controllers import controllers
     from .auth import auth
-    from .admin_controllers import admin_controls
+    from .admin_controllers import admin_controls, bootstrap
     app.register_blueprint(controllers, prefix='/')
     app.register_blueprint(auth, prefix='/')
     app.register_blueprint(admin_controls, prefix='/')
-
+    bootstrap.init_app(app)
     from .models import User
     app.app_context().push()
     create_database(app)
@@ -33,7 +33,7 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.user_login'
     # admin configurations
-    # admin = Admin(app)
+    
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>show management</title>
+</head>
+<body>
+    {% include 'admin/base.html.jinja2' %}
+    <div class="container-fluid">
+        <div class="show--list container mt-5" style="margin: 0 auto;">
+            <a href="add_show" class="btn btn-primary">Add Shows</a>
+            <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">{{"show id"}}</th>
+      <th scope="col">{{"Show Name"}}</th>
+      <th scope="col">{{"Release Date"}}</th>
+      <th scope="col">{{"Rating"}}</th>
+      <th scope="col">{{"Show Description"}}</th>
+      <th scope="col">{{"Show Poster"}}</th>
+      <th scope="col">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for show in shows %}
+    <tr>
+      <th scope="row">{{show.show_id}}</th>
+      <td>{{show.show_name}}</td>
+      <td>{{show.release_date}}</td>
+      <td>{{show.rating}}</td>
+      <td>{{show.show_description}}</td>
+      <td><img src="{{show.poster_link}}" alt="show poster"></td>
+      <td>
+        <span>
+            <a href="edit_show/{{show.show_id}}" class="btn btn-outline-primary">edit show</a>
+            <a href="edit_show/{{show.show_id}}" class="btn btn-outline-danger">Delete Show</a>
+        </span>
+      </td>
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+        </div>
+    </div>
+</body>
+</html>

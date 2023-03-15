@@ -9,15 +9,18 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
-    username = db.Column(db.String(150), nullable=False)
+    username = db.Column(db.String(150),unique=True, nullable=False)
 
     def get_id(self):
         return self.user_id
+    def get_username(self):
+        return self.username
 
 
 class Shows(db.Model):
     __tablename__ = "shows"
     show_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    
     show_name = db.Column(db.String(150), unique=True, nullable=False)
     release_date = db.Column(db.String(150), nullable=False)
     rating = db.Column(db.Numeric(precision=2, scale=1))
@@ -51,3 +54,8 @@ class Shows_in_Venues(db.Model):
     venue_id = db.Column(db.Integer, db.ForeignKey('venues.venue_id'), nullable=False)
     show = db.relationship('Shows', backref=db.backref('shows_in_venues', lazy=True))
     venue = db.relationship('Venues', backref=db.backref('shows_in_venues', lazy=True))
+
+    column_labels = {
+        'show_id': 'Show',
+        'venue_id': 'Venue',
+    }

@@ -1,6 +1,6 @@
 # from wsgiref.validate import validator
 from hashlib import sha256
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, jsonify
 import flask_login
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
@@ -50,7 +50,7 @@ def user_login():
             if check_password_hash(user.password, form.password.data):
                 flash('Logged in successfully', category='success')
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('auth.success'))
+                return redirect(url_for('controllers.index'))
             else:
                 flash('wrong password', category='error')
         else:
@@ -61,21 +61,37 @@ def user_login():
 
 @auth.route("/signup", methods=['GET', 'POST'])
 def user_signup():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        # return "<h1> Already Logged In " + " " +form.email.data + " "+ form.username.data + " " + "</h1>"
-        password_hash = generate_password_hash(
-            form.password.data, method='sha256')
-        new_user = User(
-            email=form.email.data,
-            password=password_hash,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            username=form.username.data
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('controllers.index'))
+    try:
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            # return "<h1> Already Logged In " + " " +form.email.data + " "+ form.username.data + " " + "</h1>"
+            password_hash = generate_password_hash(
+                form.password.data, method='sha256')
+            email = form.email.data,
+            password = password_hash,
+            first_name = form.first_name.data,
+            last_name = form.last_name.data,
+            username = form.username.data
+            check_user = User.query.filter_by(username=username).first()
+
+            if check_user:
+                flash('User already exists', category='error')
+                return redirect(url_for('auth.user_signup'))
+            else:
+                new_user = User(
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    username=username
+                )
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect(url_for('controllers.index'))
+    except Exception as e:
+        db.session.rollback()
+        print(jsonify({'error': str(e)}), 500)
+        return render_template("signup_page.html.jinja2", form=form)
     return render_template("signup_page.html.jinja2", form=form)
 
 
@@ -83,3 +99,10 @@ def user_signup():
 @login_required
 def success():
     return render_template('showsuccess.html')
+
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth.user_login'))
