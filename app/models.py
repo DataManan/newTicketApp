@@ -28,7 +28,9 @@ class Shows(db.Model):
     show_description = db.Column(db.String)
     cast = db.Column(db.String)
     poster_link = db.Column(db.String)
-
+    
+    def get_id(self):
+        return self.show_id
 
 class Admin(db.Model):
     __tablename__ = "admin"

@@ -1,15 +1,24 @@
 <div class="col m-2 card movies__card" style="width: 12.99rem;">
-  <img src="{{SHOW.poster}}" alt="{{SHOW.title}}" class="card-img-top movie__poster">
+  {% if SHOW.poster_link %}
+  <img src="{{SHOW.poster_link}}" alt="{{SHOW.show_name}}" class="card-img-top movie__poster">
+  {% else %}
+  <h3>
+    <img src="../static/images/no-poster.png" alt="{{SHOW.show_name}}" class="card-img-top movie__poster">
+  </h3>
+  {% endif %}
   <div class="card-body movie__body">
     <h5 class="card-title movie__title">
-        {{SHOW.title}}
+        {{SHOW.show_name}}
     </h5>
-    <p class="card-text movies__tags">
-        Tags:
-            {% for tag in SHOW.tags %}
-            {{tag}}
-            {% endfor %}
 
+    <p class="card-text movies__tags">
+        Tags : {{SHOW.tags}}
+    </p>
+    <p class="card-text">
+      Release Date : {{SHOW.release_date}}
+    </p>
+    <p class="card-text">
+      Ratings : {{SHOW.rating}}
     </p>
     
   </div>

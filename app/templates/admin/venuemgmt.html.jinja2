@@ -32,18 +32,24 @@
           </a>
           
         </div>
-        {% for i in range(10) %}
+        {% for venue in venues %}
         <div class="card col-sm-4 venue__card" style="max-width: 18rem">
           <div class="card-body">
             <h5 class="card-title display-6">
-              {{ "from venue model" }}
+              {{ venue.venue_name }}
             </h5>
             <p class="card-text">
-              {{ "Some quick information about Venues" }}
+              {{ venue.capacity }}
+            </p>
+            <p class="card-text">
+              {{ venue.location }}
+            </p>
+            <p class="card-text">
+              {{ venue.venue_tags}}
             </p>
             <span class="venue__controls">
               <button class="btn btn-primary">Add Show</button>
-              <button class="btn btn-outline-warning">Edit Venue</button>
+              <a class="btn btn-outline-warning" href="">Edit Venue</a>
               <button class="btn btn-outline-danger">Delete Venue</button>
             </span>
           </div>

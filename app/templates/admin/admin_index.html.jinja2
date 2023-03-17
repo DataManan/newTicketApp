@@ -5,8 +5,38 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="{{url_for{{}}}}">
 </head>
 <body>
   {% include 'admin/base.html.jinja2' %}
+  <div class="container">
+  <div class="col-sm-9">
+  
+  
+  <table class="table table-bordered table-hover ">
+  <thead>
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email ID</th>
+    </tr>
+  </thead>
+  {% for user in users %}
+  <tbody>
+    <tr>
+      <th scope="row">{{user.user_id}}</th>
+      <td>{{user.first_name}}</td>
+      <td>{{user.last_name}}</td>
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+  
+  </div>
+</div>
 </body>
 </html>

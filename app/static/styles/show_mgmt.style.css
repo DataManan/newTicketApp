@@ -1,0 +1,83 @@
+/* //////////
+resoucess
+
+    color: rgba(217, 50, 80, 1);
+
+    color: rgba(115, 39, 67, 1);
+
+    color: rgba(3, 15, 38, 1);
+
+    color: rgba(242, 87, 87, 1);
+
+    color: rgba(242, 242, 242, 1);
+ 
+*/
+
+/* //////////
+reset
+//////////// */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* //////////
+General
+////////////// */
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+
+/* root */
+:root {
+    font-family: 'PT Sans', sans-serif;
+    --clr-primary-5: #f2f2f2;
+    --clr-primary-4: #f25757;
+    --clr-primary-3: #030f26;
+    --clr-primary-2: #732743;
+    --clr-primary-1: #d93250;
+    --clr-sec-1: #FF3D3D;
+
+    /* font weights */
+    --w-light: 300;
+    --w-heavy: 700;
+    --w-regular: 500;
+}
+
+body {
+    margin: 0;
+    font-family: 'PT Sans', sans-serif;
+}
+
+/* container */
+.container-fluid{
+    padding: 1rem;   
+}
+
+.show--container{
+    background: var(--clr-primary-2);
+}
+
+/* /////////
+heading
+/////////// */
+    .shows__heading{
+        color: var(--clr-primary-5);
+        font-weight: var(--w-heavy);
+        text-align: center;
+        font-style: oblique;
+        line-height: 0;
+        margin: 1rem auto;
+        font-size: 3rem;
+    }
+
+
+/* //////////
+shows list
+///////////// */
+
+.show__list{
+    /* border: 0.5rem solid var(--clr-primary-2); */
+    background: var(--clr-primary-5);
+    /* margin-bottom: 2rem !important; */
+}

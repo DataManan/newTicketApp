@@ -90,6 +90,7 @@ Movies
     }
     .container--movies{
         padding: 2.5rem;
+        margin: 1rem auto;
     }
     /* //////////
     movie card 
@@ -100,11 +101,12 @@ Movies
             background: var(--clr-primary-3);
             color: var(--clr-primary-5);
             padding: 0;
+            max-width: 20rem;
         }
         
-        /* .movie__body{
-            
-        } */
+        .movie__body{
+            text-align: center;
+        }
         .movie__title {
             font-weight: 600;
             margin: auto;

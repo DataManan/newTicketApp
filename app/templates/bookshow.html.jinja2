@@ -16,44 +16,50 @@
     <!-- /////////// -->
   </head>
   <body>
-    <div >{% include "header.html.jinja2" %}</div>
+    <div>{% include "header.html.jinja2" %}</div>
     <div class="container-fluid show__container">
       <div class="row">
         <!-- poster column -->
         <div class="col-3">
-          {% for SHOW in SHOWS %} {% if SHOW.show_id == show_id %}
+          {% if SHOW.poster_link %}
           <img
-            src="{{ SHOW.poster }}"
-            alt="{{ SHOW.title }}"
+            src="{{ SHOW.poster_link }}"
+            alt="{{ SHOW.show_name }}"
             class="card-img-top show--poster"
           />
-          {% endif %} {% endfor %}
+          {% else %}
+            <img
+              src="../static/images/no-poster.png"
+              alt="{{ SHOW.show_name }}"
+              class="card-img-top show--poster"
+            />
+          {% endif %}
         </div>
         <!-- show description column -->
         <div class="col-9 show--col">
-          {% for SHOW in SHOWS %} 
-              {% if SHOW.show_id == show_id %}
-                  <div class="show--title lead">
-                      {{ SHOW.title }}
-                  </div>
-                  <div class="show--tags">
-                      {% for tag in SHOW.tags %}
-                      <span class="show--tag">
-                      {{ tag }}
-                      </span>
-                      {% endfor %}
-                  </div>
-                  <div class="show--descp">
-                      {{ SHOW.description }} 
-                  </div>
-
-              {% endif %} 
-          {% endfor %}
+          <div class="show--title lead">
+            {{ SHOW.show_name }}
+          </div>
+          <div class="show--tags">
+            {% for tag in SHOW.tags.split(',') %}
+            <span class="show--tag">
+              {{ tag }}
+            </span>
+            {% endfor %}
+          </div>
+          <div class="show--ratings">{{ SHOW.rating }}/10</div>
+          <div class="show--release-date">
+            {{ SHOW.release_date }}
+          </div>
+          <div class="show--descp">
+            {{ SHOW.show_description }}
+          </div>
+          <div class="show--cast">
+            {{ SHOW.cast }}
+          </div>
         </div>
         <!-- column ends here -->
-
       </div>
-      
     </div>
 
     <!-- JavaScript /BootStrap only/ -->
