@@ -28,6 +28,10 @@ class Shows(db.Model):
     show_description = db.Column(db.String)
     cast = db.Column(db.String)
     poster_link = db.Column(db.String)
+    venue_name = db.Column(db.String, db.ForeignKey('venues.venue_name'), nullable=False)
+    venues = db.relationship(
+        'Venues', backref=db.backref('shows', lazy=True))
+
     
     def get_id(self):
         return self.show_id

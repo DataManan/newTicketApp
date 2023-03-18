@@ -18,6 +18,7 @@
             <tr>
               <th scope="col">{{ "show id" }}</th>
               <th scope="col">{{ "Show Name" }}</th>
+              <th scope="col">{{ "Venue" }}</th>
               <th scope="col">{{ "Release Date" }}</th>
               <th scope="col">{{ "Rating" }}</th>
               <th scope="col">{{ "Show Description" }}</th>
@@ -31,9 +32,10 @@
             <tr>
               <th scope="row">{{ show.show_id }}</th>
               <td>{{ show.show_name }}</td>
+              <td>{{ show.venue_name }}</td>
               <td>{{ show.release_date }}</td>
               <td>{{ show.rating }}</td>
-              <td>{{ show.show_description }}</td>
+              <td style="max-width: 10rem;">{{ show.show_description }}</td>
               <td>{{show.cast}}</td>
               <!-- <td><img src="{{show.poster_link}}" alt="show poster" style="max-width: 7.5rem;"></td> -->
               <td class="text-align-center">
@@ -45,7 +47,7 @@
                   >
                   <form action="{{ url_for('admin_controllers.delete_show', show_id=show.show_id) }}" method="POST" class="col">
                     <input type="hidden" name="_method" value="DELETE" />
-                    <button type="submit" class="btn btn-outline-danger p-1">
+                    <button type="submit" class="btn btn-outline-danger">
                       Delete
                     </button>
                   </form>

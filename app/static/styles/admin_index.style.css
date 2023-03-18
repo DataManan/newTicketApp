@@ -54,3 +54,8 @@ body {
     padding: 2rem;
     margin: 1rem auto;
 }
+
+table .table__head{
+    color: var(--clr-primary-5);
+    background: var(--clr-primary-3);
+}

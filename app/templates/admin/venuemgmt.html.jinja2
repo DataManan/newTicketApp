@@ -36,6 +36,7 @@
         <div class="card col-sm-4 venue__card" style="max-width: 18rem">
           <div class="card-body">
             <h5 class="card-title display-6">
+
               {{ venue.venue_name }}
             </h5>
             <p class="card-text">
@@ -47,10 +48,18 @@
             <p class="card-text">
               {{ venue.venue_tags}}
             </p>
-            <span class="venue__controls">
-              <button class="btn btn-primary">Add Show</button>
-              <a class="btn btn-outline-warning" href="">Edit Venue</a>
-              <button class="btn btn-outline-danger">Delete Venue</button>
+            <span class="venue__controls d-block">
+              <!-- <button class="btn btn-primary">Add Show</button> -->
+              <a class="btn btn-outline-warning" href="edit_venue/{{ venue.venue_id }}">Edit Venue</a>
+              <form action="{{ url_for('admin_controllers.delete_venue', venue_id=venue.venue_id) }}" method="POST" class="col">
+                
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <span class="d-none">{{ csrf_token() }}</span>
+                    
+                    <button type="submit" class="btn btn-outline-danger">
+                      Delete
+                    </button>
+                  </form>
             </span>
           </div>
         </div>

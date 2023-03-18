@@ -1,53 +1,16 @@
-from crypt import methods
-from dataclasses import dataclass
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
-from . import db
+from . import db, csrf
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField, IntegerField, DecimalField
 from wtforms.validators import InputRequired, Email, Length, DataRequired
 from .models import Venues, Shows, Shows_in_Venues, User
+from .admin_forms import VenueForm, ShowForm
+
 
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 # url_prefix='/admin'
 bootstrap = Bootstrap()
-
-
-class AddVenue(FlaskForm):
-    venue_name = StringField('venue name', validators=[
-                             InputRequired(), Length(min=3, max=256)])
-
-    capacity = IntegerField('capacity', validators=[InputRequired()])
-    location = StringField('location', validators=[
-                           InputRequired(), Length(min=8, max=256)])
-    tags = StringField('tags', validators=[InputRequired()])
-
-
-class AddShow(FlaskForm):
-    show_name = StringField('Show Name', validators=[
-                            InputRequired(), Length(min=3, max=256)])
-    release_date = StringField('Release Date', validators=[
-                               InputRequired(), Length(min=3, max=256)])
-    rating = DecimalField('Ratings', places=2,validators=[InputRequired()])
-    tags = StringField('Tags', validators=[
-                       InputRequired(), Length(min=3, max=256)])
-    show_descp = StringField('Show Description', validators=[
-                             InputRequired(), Length(min=3, max=1024)])
-    cast = StringField('Cast')
-    poster_link = StringField('Poster Link')
-
-
-class ShowForm(FlaskForm):
-    show_name = StringField('Show Name', validators=[
-                            DataRequired(), Length(max=150)])
-    release_date = StringField('Release Date', validators=[
-                               DataRequired(), Length(max=150)])
-    rating = DecimalField('Rating', places=1)
-    tags = StringField('Tags')
-    show_description = StringField('Show Description')
-    cast = StringField('Cast')
-    poster_link = StringField('Poster Link')
-
 
 @admin_controls.route("/", methods=['GET', 'POST'])
 def adminhome():
@@ -68,7 +31,7 @@ def venue_mgmt():
 
 @admin_controls.route('/create_venue', methods=['GET', 'POST'])
 def create_venue():
-    add_venue = AddVenue()
+    add_venue = VenueForm()
     if add_venue.validate_on_submit():
         new_venue = Venues(
             venue_name=add_venue.venue_name.data,
@@ -85,6 +48,32 @@ def create_venue():
 
     return render_template('admin/addvenueform.html.jinja2', form=add_venue)
 
+
+@admin_controls.route('/edit_venue/<venue_id>', methods=['GET', 'POST'])
+def edit_venue(venue_id):
+    venue = Venues.query.get_or_404(venue_id)
+    edit_form = VenueForm(obj=venue)
+    if edit_form.validate_on_submit():
+        edit_form.populate_obj(venue)
+        db.session.commit()
+        return redirect(url_for('admin_controllers.venue_mgmt'))
+    
+    return render_template('admin/venue_edit_form.html.jinja2', form=edit_form)
+
+
+@admin_controls.route('/delete_venue/<venue_id>', methods=['GET', 'POST'])
+@csrf.exempt
+def delete_venue(venue_id):
+    try:
+        venue = Venues.query.get_or_404(venue_id)
+        db.session.delete(venue)
+        db.session.commit()
+
+        return redirect(url_for('admin_controllers.venue_mgmt'))
+    except:
+        db.session.rollback()
+        return redirect(url_for('admin_controllers.venue_mgmt'))
+
 """# ###########################################
 # show manager
 #########################################"""
@@ -97,10 +86,12 @@ def show_mgmt():
 
 @admin_controls.route("/add_show", methods=['GET', 'POST'])
 def add_show():
-    addshow_form = AddShow()
+    addshow_form = ShowForm()
+    addshow_form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
         new_show = Shows(
             show_name=addshow_form.show_name.data,
+            venue_name=addshow_form.venue_name.data,
             release_date=addshow_form.release_date.data,
             rating=addshow_form.rating.data,
             tags=addshow_form.tags.data,
@@ -127,6 +118,7 @@ def edit_show(show_id):
 
 
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
+@csrf.exempt
 def delete_show(show_id):
     show = Shows.query.get_or_404(show_id)
     db.session.delete(show)

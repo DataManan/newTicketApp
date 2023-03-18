@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %}
-{%block title %} Create Venue {% endblock %} 
+{%block title %} Create Show{% endblock %} 
 {% block styles %}
 {{ super() }}
 <link rel="stylesheet" href="../../static/styles/add_show.css" />
@@ -13,6 +13,8 @@
         {{ form.hidden_tag() }}
 
         {{ wtf.form_field(form.show_name) }}
+
+        {{ wtf.form_field(form.venue_name) }}
 
         {{ wtf.form_field(form.release_date) }}
 

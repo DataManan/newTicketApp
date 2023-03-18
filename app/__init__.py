@@ -6,9 +6,10 @@ import os
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
+csrf = CSRFProtect()
 db = SQLAlchemy()
 DB_NAME = "database.sqlite3"
-csrf = CSRFProtect()
+
 
 
 def create_app():
