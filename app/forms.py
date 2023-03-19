@@ -67,9 +67,9 @@ def get_total_tickets_booked(show_name, venue_name):
 def ticket_avialable(form, field):
     current_total_bookings = TicketsBooked.current_total_bookings(form.showname.data, form.venuename.data)
     # venue = Venues.query.filter_by(venue_name=form.venuename.data).first()
-    venue_capacity = Venues.venue_capacity
+    venue_capacity = Venues.venue_capacity(form.venuename.data)
     # venue_capacity = venue.capacity
-    ticket_remaining = int(venue_capacity) - int(current_total_bookings)
+    ticket_remaining = venue_capacity - current_total_bookings
     if ticket_remaining < field.data:
          raise ValidationError("Only " + str(ticket_remaining) + " tickets are remaning")
 

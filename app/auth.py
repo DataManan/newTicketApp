@@ -64,9 +64,9 @@ def success():
     return render_template('showsuccess.html')
 
 
-@auth.route('/logout')
+@auth.route('/<user_id>/logout')
 @login_required
-def logout():
+def logout(user_id):
     logout_user()
     # session['logged_in']=False
     return redirect(url_for('controllers.index'))

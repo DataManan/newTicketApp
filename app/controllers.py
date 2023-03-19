@@ -1,6 +1,5 @@
-from crypt import methods
 from dataclasses import dataclass
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, redirect, render_template, request, flash
 from flask.helpers import url_for
 from flask_login import login_required, current_user
 from .models import Shows, User, TicketsBooked
@@ -13,8 +12,11 @@ controllers = Blueprint('controllers', __name__)
 
 @controllers.route('/')
 def index():
-    movies = Shows.query.all()
-    return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user)
+    if not current_user.is_authenticated:
+        movies = Shows.query.all()
+        return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user)
+    
+    return redirect(url_for('controllers.user_loggedin', user_id=current_user.user_id))
 
 @controllers.route('/<user_id>')
 @login_required
