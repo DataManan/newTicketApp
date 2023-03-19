@@ -98,3 +98,14 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+.select-multiple-sidebar {
+    max-height: 7.5rem;
+    /* maximum height of the field */
+    overflow-y: auto;
+    /* add a scrollbar if needed */
+}
+.venue__container{
+        font-family: 'PT Sans', sans-serif;
+        font-size: 1rem;
+}

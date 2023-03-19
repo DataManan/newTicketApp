@@ -2,10 +2,11 @@
 block title %} Create Venue {% endblock %} {% block styles %}
 {{ super() }}
 <link rel="stylesheet" href="../../static/styles/create_venue.css" />
+
 {% endblock %} {% block content %}
 <div class="container m-5">
   <div class="row">
-    <div class="col-3">
+    <div class="col-sm-12">
       <form class="form-signin" method="POST">
         <h2 class="form-signin-heading">Create Venue</h2>
         {{ form.hidden_tag() }}
@@ -14,7 +15,11 @@ block title %} Create Venue {% endblock %} {% block styles %}
 
         {{ wtf.form_field(form.capacity) }}
 
-        {{ wtf.form_field(form.location) }}
+        {{ wtf.form_field(form.street) }}
+
+        {{ wtf.form_field(form.city) }}
+
+        {{ wtf.form_field(form.state) }}
 
         {{ wtf.form_field(form.tags) }}
 

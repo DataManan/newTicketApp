@@ -1,10 +1,10 @@
-# from random import choices
-from datetime import date
 from flask_wtf import FlaskForm
-# from flask import current_app as app
-from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField
-from wtforms.validators import DataRequired, InputRequired, Length, ValidationError, Regexp
-from .models import Venues, Shows, Shows_in_Venues, User
+from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField
+from wtforms.validators import InputRequired, Length, ValidationError
+from wtforms.widgets import ListWidget, CheckboxInput
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField
+from flask_admin.form.widgets import Select2Widget
+from .models import Venues, Shows, User
 from . import db
 
 
@@ -21,8 +21,13 @@ class VenueForm(FlaskForm):
         InputRequired(), Length(min=3, max=256)])
 
     capacity = IntegerField('capacity', validators=[InputRequired()])
-    location = LowercaseStringField('location', validators=[
-        InputRequired(), Length(min=8, max=256)])
+
+    street = LowercaseStringField(
+        'Street', validators=[InputRequired(), Length(min=3, max=256)])
+    city = LowercaseStringField(
+        'City', validators=[InputRequired(), Length(min=3, max=256)])
+    state = LowercaseStringField(
+        'State', validators=[InputRequired(), Length(min=3, max=256)])
     tags = LowercaseStringField('tags', validators=[InputRequired()])
 
 # custom validator to check is venue name exist in databse
@@ -32,29 +37,26 @@ def validate_venue_name(self, venue_name):
     venue = Venues.query.filter_by(venue_name=venue_name.data).first()
     if not venue:
         raise ValidationError('Invalid venue name.')
-    
 
-def DateNotInFuture(form, field):
-    if field.data > date.today():
-        raise ValidationError('Date cannot be in the future.')
 
 class ShowForm(FlaskForm):
 
-    # print(venues_list)
-    show_name = LowercaseStringField('Show Name', validators=[
-        InputRequired(), Length(min=3, max=256)])
-    
-    venue_name = SelectField('Venue Name', choices=[], validators=[InputRequired(), Length(min=3, max=256), validate_venue_name])
-
-    release_date = StringField('Release Date', validators=[InputRequired(), Length(min=3, max=256)])
-    
-
+    show_name = LowercaseStringField('Show Name', validators=[InputRequired(), Length(min=3, max=256)])
+    venue_name = SelectMultipleField('Venue Name', coerce=str , choices=[], option_widget=CheckboxInput(), 
+                                     widget=ListWidget())
+    ticket_price = IntegerField('Ticket Price', validators=[InputRequired()])
+    release_date = StringField('Release Date', validators=[
+                               InputRequired(), Length(min=3, max=256)])
     rating = DecimalField('Ratings', places=2, validators=[InputRequired()])
-    tags = LowercaseStringField('Tags', validators=[
-        InputRequired(), Length(min=3, max=256)])
-    show_descp = LowercaseStringField('Show Description', validators=[
-        InputRequired(), Length(min=3, max=1024)])
+    tags = LowercaseStringField(
+        'Tags', validators=[InputRequired(), Length(min=3, max=256)])
+    show_description = LowercaseStringField('Show Description', validators=[
+                                      InputRequired(), Length(min=3, max=1024)])
     cast = LowercaseStringField('Cast')
     poster_link = StringField('Poster Link')
 
-    
+
+"""
+venue_name= QuerySelectField(query_factory=lambda: models.Venues.query.all(),
+                           widget=Select2Widget())
+"""

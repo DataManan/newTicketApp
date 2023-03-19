@@ -5,7 +5,7 @@ from os import path
 import os
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
-
+import unittest
 csrf = CSRFProtect()
 db = SQLAlchemy()
 DB_NAME = "database.sqlite3"
@@ -14,10 +14,13 @@ DB_NAME = "database.sqlite3"
 
 def create_app():
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
 
     app.config['SECRET_KEY'] = "THISWASSUPPOSEDTOBEASECRET"
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/database.sqlite3"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/myticketDB.db"
+    app.config['TESTING'] = True
+    client = app.test_client()
+
     db.init_app(app)
     from .controllers import controllers
     from .auth import auth, login_manager

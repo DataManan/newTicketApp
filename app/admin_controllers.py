@@ -1,10 +1,8 @@
+from dataclasses import dataclass
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from . import db, csrf
-from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, PasswordField, BooleanField, IntegerField, DecimalField
-from wtforms.validators import InputRequired, Email, Length, DataRequired
-from .models import Venues, Shows, Shows_in_Venues, User
+from .models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
 
 
@@ -36,7 +34,9 @@ def create_venue():
         new_venue = Venues(
             venue_name=add_venue.venue_name.data,
             capacity=add_venue.capacity.data,
-            location=add_venue.location.data,
+            street=add_venue.street.data,
+            city=add_venue.city.data,
+            State=add_venue.state.data,
             venue_tags=add_venue.tags.data
         )
         db.session.add(new_venue)
@@ -89,13 +89,15 @@ def add_show():
     addshow_form = ShowForm()
     addshow_form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
+        venue_name = ", ".join(addshow_form.venue_name.data)
         new_show = Shows(
             show_name=addshow_form.show_name.data,
-            venue_name=addshow_form.venue_name.data,
+            venue_name = venue_name,
+            ticket_price = addshow_form.ticket_price.data,
             release_date=addshow_form.release_date.data,
             rating=addshow_form.rating.data,
             tags=addshow_form.tags.data,
-            show_description=addshow_form.show_descp.data,
+            show_description=addshow_form.show_description.data,
             cast=addshow_form.cast.data,
             poster_link=addshow_form.poster_link.data
         )
@@ -109,8 +111,10 @@ def add_show():
 def edit_show(show_id):
     show = Shows.query.get_or_404(show_id)
     form = ShowForm(obj=show)
+    form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if form.validate_on_submit():
         form.populate_obj(show)
+        show.venue_name = ", ".join(form.venue_name.data)
         db.session.commit()
         return redirect(url_for('admin_controllers.show_mgmt'))
 

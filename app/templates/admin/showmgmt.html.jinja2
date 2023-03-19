@@ -18,10 +18,11 @@
             <tr>
               <th scope="col">{{ "show id" }}</th>
               <th scope="col">{{ "Show Name" }}</th>
-              <th scope="col">{{ "Venue" }}</th>
+              <th scope="col">{{ "Venue Name" }}</th>
+              <th scope="col">{{ "Ticket Price  " }}</th>
               <th scope="col">{{ "Release Date" }}</th>
               <th scope="col">{{ "Rating" }}</th>
-              <th scope="col">{{ "Show Description" }}</th>
+              <th scope="col" >{{ "Show Description" }}</th>
               <th scope="col">{{ "Cast" }}</th>
               <!-- <th scope="col">{{"Show Poster"}}</th> -->
               <th scope="col">Options</th>
@@ -32,11 +33,12 @@
             <tr>
               <th scope="row">{{ show.show_id }}</th>
               <td>{{ show.show_name }}</td>
-              <td>{{ show.venue_name }}</td>
+              <td style="max-width: 10rem;">{{ show.venue_name }}</td>
+              <td>Rs. {{ show.ticket_price }}</td>
               <td>{{ show.release_date }}</td>
               <td>{{ show.rating }}</td>
-              <td style="max-width: 10rem;">{{ show.show_description }}</td>
-              <td>{{show.cast}}</td>
+              <td style=" margin: 1rem; max-width: 10rem;">{{ show.show_description }}</td>
+              <td style="max-width: 10rem;">{{show.cast}}</td>
               <!-- <td><img src="{{show.poster_link}}" alt="show poster" style="max-width: 7.5rem;"></td> -->
               <td class="text-align-center">
                 <span class="row">

@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %}
-{%block title %} Create Venue {% endblock %} 
+{%block title %} Create Show{% endblock %} 
 {% block styles %}
 {{ super() }}
 <link rel="stylesheet" href="../../static/styles/add_show.css" />
@@ -14,29 +14,18 @@
 
         {{ wtf.form_field(form.show_name) }}
 
-        <div class="venue__container">
-          <p>
-            {{form.venue_name.label}}
-          </p>
-          <div class="select-multiple-sidebar">
-            {{(form.venue_name) }}
-          </div>
-          
-        </div>
+        {{ wtf.form_field(form.venue_name) }}
 
         {{ wtf.form_field(form.ticket_price) }}
 
-        {{ wtf.form_field(form.release_date) }}
+        {{ wtf.form_field(form.show_date) }}
 
-        {{ wtf.form_field(form.rating) }}
+        {{ wtf.form_field(form.show_start_time) }}
 
-        {{ wtf.form_field(form.tags) }}
+        {{ wtf.form_field(form.show_end_time) }}
 
-        {{ wtf.form_field(form.show_description) }}
+        {{ wtf.form_field(form.capacity) }}
 
-        {{ wtf.form_field(form.cast) }}
-
-        {{ wtf.form_field(form.poster_link) }}
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">
           Submit

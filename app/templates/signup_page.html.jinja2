@@ -3,8 +3,8 @@
 {% block styles %}
 {{ super() }}
 <link rel="stylesheet" href="../static/styles/userlogin.style.css" />
-    <!-- <link rel="stylesheet" href="../static/styles/base.style.css" />
-    <link rel="stylesheet" href="../static/styles/usersign.style.css" /> -->
+    <link rel="stylesheet" href="../static/styles/base.style.css" />
+    <!-- <link rel="stylesheet" href="../static/styles/usersign.style.css" /> -->
 {% endblock styles %} {% block content %}
   <body>
     <div class="container">
@@ -24,6 +24,8 @@
             {{ wtf.form_field(form.email) }}
 
             {{ wtf.form_field(form.password) }}
+
+            {{ wtf.form_field(form.cpassword) }}
           </div>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" href="/">

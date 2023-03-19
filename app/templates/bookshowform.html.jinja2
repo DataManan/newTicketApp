@@ -1,0 +1,39 @@
+{% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %}
+{%block title %} Book Show {% endblock title %} {% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="../static/styles/userlogin.style.css" />
+<link rel="stylesheet" href="../static/styles/base.style.css" />
+<!-- <link rel="stylesheet" href="../static/styles/usersign.style.css" /> -->
+{% endblock styles %} {% block content %}
+<body>
+  <div class="container">
+    <form action="/booknow/{{ user.user_id }}/{{ show.show_id }}" class="form-signin col-3" method="POST">
+      <h2 class="form-signin-heading">Book Tickets</h2>
+      <div class="row">
+        <div class="col">
+          {{ form.hidden_tag() }}
+
+          {{ wtf.form_field(form.username) }}
+
+          {{ wtf.form_field(form.showname) }}
+
+          {{ wtf.form_field(form.venuename) }}
+
+          {{ wtf.form_field(form.totaltickets) }}
+
+          {{ wtf.form_field(form.show_date) }}
+
+
+          <button
+            class="btn btn-lg btn-success btn-block"
+            type="submit"
+            method="POST"
+          >
+            Book!
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+{% endblock content %}

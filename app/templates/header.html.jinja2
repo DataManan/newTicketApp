@@ -15,7 +15,7 @@
         <button class="btn btn-success" type="submit">Search</button>
         {% if current_user.is_authenticated %}
         <!-- When logged in will only show logout button -->
-          <a href="logout" class="btn btn-primary" type="submit" style="background: rgba(242, 87, 87, .7)">
+          <a href="{{user_id}}/logout" class="btn btn-primary" type="submit" style="background: rgba(242, 87, 87, .7)">
              LogOut </a>
         {% else %}
         <!-- After logging out it will only show login and signup button  -->
