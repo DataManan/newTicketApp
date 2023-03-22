@@ -5,7 +5,8 @@
     <div class="container-fluid">
       <a class="navbar-brand" style="color: rgba(242, 242, 242, 1)">MyTicket</a>
     
-    <form class="d-flex" role="search">
+    <form class="d-flex" role="search" method="get" action="{{ url_for('controllers.search') }}">
+      
         <input
           class="form-control me-2"
           type="search"
@@ -13,9 +14,12 @@
           aria-label="Search"
         />
         <button class="btn btn-success" type="submit">Search</button>
+        
+      </form>
+      <div class="user--options">
         {% if current_user.is_authenticated %}
         <!-- When logged in will only show logout button -->
-          <a href="{{user_id}}/logout" class="btn btn-primary" type="submit" style="background: rgba(242, 87, 87, .7)">
+  <a href="{{user_id}}/logout" class="btn btn-primary" type="submit" style="background:rgba(242, 87,87, .7)">
              LogOut </a>
         {% else %}
         <!-- After logging out it will only show login and signup button  -->
@@ -25,7 +29,7 @@
               SignUp
             </a>
         {% endif %}
-      </form>
+      </div>
     </div>
   </nav>
 </div>

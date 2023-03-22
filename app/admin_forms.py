@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField
+from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Length, ValidationError
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
@@ -11,9 +11,17 @@ from . import db
 class LowercaseStringField(StringField):
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = valuelist[0].lower()
+            self.data = valuelist[0].lower().strip()
         else:
             self.data = ''
+
+
+class AdminLoginForm(FlaskForm):
+    username = StringField('username', validators=[
+                           InputRequired(), Length(min=4, max=16)])
+    password = PasswordField('password', validators=[
+                             InputRequired(), Length(min=8, max=150)])
+    remember = BooleanField('remember me')
 
 
 class VenueForm(FlaskForm):
@@ -46,7 +54,7 @@ class ShowForm(FlaskForm):
                                      widget=ListWidget())
     ticket_price = IntegerField('Ticket Price', validators=[InputRequired()])
     release_date = StringField('Release Date', validators=[
-                               InputRequired(), Length(min=3, max=256)])
+                               InputRequired()], render_kw={"placeholder": "add date in dd/mm/YYYY format"})
     rating = DecimalField('Ratings', places=2, validators=[InputRequired()])
     tags = LowercaseStringField(
         'Tags', validators=[InputRequired(), Length(min=3, max=256)])

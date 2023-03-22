@@ -25,9 +25,11 @@ def create_app():
     from .controllers import controllers
     from .auth import auth, login_manager
     from .admin_controllers import admin_controls, bootstrap
+    from .adminAuth import admin_auth
     app.register_blueprint(controllers, prefix='/')
     app.register_blueprint(auth, prefix='/')
-    app.register_blueprint(admin_controls, prefix='/')
+    app.register_blueprint(admin_controls, prefix='/admin')
+    app.register_blueprint(admin_auth, prefix='/admin')
     bootstrap.init_app(app)
     from .models import User
     app.app_context().push()
@@ -37,11 +39,12 @@ def create_app():
     login_manager.login_view = 'auth.user_login'
     csrf.init_app(app)
     # admin configurations
-
+    # admin_login_manager.init_app(app)
+    # admin_login_manager.login_view = 'admin_auth.admin_login'
     return app
 
 
 def create_database(app):
     if not path.exists('app/' + DB_NAME):
         db.create_all()
-        print('Created Database!')
+        print('Database Created!')

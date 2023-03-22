@@ -1,5 +1,7 @@
-from dataclasses import dataclass
+from datetime import datetime
+from platform import release
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
+from flask_login import login_required
 from . import db, csrf
 from flask_bootstrap import Bootstrap
 from .models import Venues, Shows, User
@@ -11,6 +13,7 @@ admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 bootstrap = Bootstrap()
 
 @admin_controls.route("/", methods=['GET', 'POST'])
+@login_required
 def adminhome():
     users = User.query.all()
     return render_template("admin/admin_index.html.jinja2", users=users)
@@ -22,12 +25,14 @@ venue manager
 """
 
 @admin_controls.route("/venue_mgmt", methods=['GET', 'POST'])
+@login_required
 def venue_mgmt():
     venues = Venues.query.all()
     return render_template("admin/venuemgmt.html.jinja2", venues=venues)
 
 
 @admin_controls.route('/create_venue', methods=['GET', 'POST'])
+@login_required
 def create_venue():
     add_venue = VenueForm()
     if add_venue.validate_on_submit():
@@ -50,6 +55,7 @@ def create_venue():
 
 
 @admin_controls.route('/edit_venue/<venue_id>', methods=['GET', 'POST'])
+@login_required
 def edit_venue(venue_id):
     venue = Venues.query.get_or_404(venue_id)
     edit_form = VenueForm(obj=venue)
@@ -62,6 +68,7 @@ def edit_venue(venue_id):
 
 
 @admin_controls.route('/delete_venue/<venue_id>', methods=['GET', 'POST'])
+@login_required
 @csrf.exempt
 def delete_venue(venue_id):
     try:
@@ -79,17 +86,19 @@ def delete_venue(venue_id):
 #########################################"""
 
 @admin_controls.route("/show_mgmt", methods=['GET', 'POST'])
+@login_required
 def show_mgmt():
     shows = Shows.query.all()
     return render_template("admin/showmgmt.html.jinja2", shows=shows)
 
 
 @admin_controls.route("/add_show", methods=['GET', 'POST'])
+@login_required
 def add_show():
     addshow_form = ShowForm()
     addshow_form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
-        venue_name = ", ".join(addshow_form.venue_name.data)
+        venue_name = ",".join(addshow_form.venue_name.data)
         new_show = Shows(
             show_name=addshow_form.show_name.data,
             venue_name = venue_name,
@@ -108,13 +117,14 @@ def add_show():
 
 
 @admin_controls.route('/edit_show/<int:show_id>', methods=['GET', 'POST'])
+@login_required
 def edit_show(show_id):
     show = Shows.query.get_or_404(show_id)
     form = ShowForm(obj=show)
     form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if form.validate_on_submit():
         form.populate_obj(show)
-        show.venue_name = ", ".join(form.venue_name.data)
+        show.venue_name = ",".join(form.venue_name.data)
         db.session.commit()
         return redirect(url_for('admin_controllers.show_mgmt'))
 
@@ -122,6 +132,7 @@ def edit_show(show_id):
 
 
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
+@login_required
 @csrf.exempt
 def delete_show(show_id):
     show = Shows.query.get_or_404(show_id)

@@ -1,10 +1,10 @@
 from datetime import date
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length, ValidationError
 from .admin_forms import LowercaseStringField
 from werkzeug.security import check_password_hash
-from .models import User, TicketsBooked, Venues
+from .models import User, TicketsBooked, Venues, Shows
 from sqlalchemy.sql import func
 from . import db
 
@@ -25,6 +25,10 @@ class LoginForm(FlaskForm):
                              InputRequired(), Length(min=8, max=150)])
     remember = BooleanField('remember me')
 
+
+class SearchForm(FlaskForm):
+    search = StringField('Search')
+    submit = SubmitField('Search')
 
 class RegistrationForm(FlaskForm):
 
@@ -57,29 +61,38 @@ def verify_user(form, field):
           raise ValidationError("user does not exist")
 
 
-def get_total_tickets_booked(show_name, venue_name):
-    total_tickets_booked = TicketsBooked.query.with_entities(db.func.sum(
-        TicketsBooked.totalticket)).filter_by(showname=show_name, venuename=venue_name).scalar()
-    if total_tickets_booked:
-        return total_tickets_booked
-    else:
-         return 0
 def ticket_avialable(form, field):
-    current_total_bookings = TicketsBooked.current_total_bookings(form.showname.data, form.venuename.data)
-    # venue = Venues.query.filter_by(venue_name=form.venuename.data).first()
-    venue_capacity = Venues.venue_capacity(form.venuename.data)
-    # venue_capacity = venue.capacity
-    ticket_remaining = venue_capacity - current_total_bookings
-    if ticket_remaining < field.data:
-         raise ValidationError("Only " + str(ticket_remaining) + " tickets are remaning")
+    if field.data > 0:
+        # uses class method current_total_bookings from TciektsBooked class
+        current_total_bookings = TicketsBooked.current_total_bookings(form.showname.data, form.venuename.data)
+        # Returns the total capacity of the venue
+        # for each show in venue, full capacity of venue is alloted
+        venue_capacity = Venues.venue_capacity(form.venuename.data)
+        # calculates the tickets remaining 
+        ticket_remaining = venue_capacity - current_total_bookings
+        if ticket_remaining < field.data:
+            #  Raises a validation error if user is booking tickets greater than number of tickets left
+            raise ValidationError("Only " + str(ticket_remaining) + " tickets are remaning")
+    else:
+         raise ValidationError("Less than 1 tickets cannot be booked!")
 
+def get_venue_choices(showname):
+     venues = Shows.query.filter_by(show_name=showname).first()
+     venue_list = venues.venue_name.split(',')
+
+     venue_choices = [(venue) for venue in venue_list]
+     return venue_choices
 
 class BookShowForm(FlaskForm):
     username = LowercaseStringField('Enter Your Username', validators=[InputRequired(), verify_user], render_kw={"placeholder":"enter your username"})
+    # Showname is prefilled with than show that user has clicked on
     showname=LowercaseStringField("Show name", validators=[InputRequired()])
-    venuename = LowercaseStringField("venue name", validators=[InputRequired()])
+    # For each Show, venuename gives options for the user to select one of the given venues
+    venuename = SelectField("venue name", choices=[], validators=[InputRequired()])
     totaltickets=IntegerField("Total tickets", validators=[InputRequired(), ticket_avialable])
     show_date = DateField("Date of reservation", validators=[InputRequired()])
+
+
     # password = PasswordField("Password", validators=[InputRequired()], render_kw={"placehold":"password"})
 
     

@@ -58,12 +58,6 @@ def user_signup():
     return render_template("signup_page.html.jinja2", form=form)
 
 
-@auth.route('/success')
-@login_required
-def success():
-    return render_template('showsuccess.html')
-
-
 @auth.route('/<user_id>/logout')
 @login_required
 def logout(user_id):

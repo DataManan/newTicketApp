@@ -56,9 +56,10 @@ class Venues(db.Model):
     def venue_capacity(venue_name):
         venue = Venues.query.filter_by(venue_name=venue_name).first()
         print(venue)
-        
-        return venue.capacity
-        
+        if venue:
+            return venue.capacity
+        else:
+            return 0
     
 class TicketsBooked(db.Model):
     __tablename__="ticket_booked"
