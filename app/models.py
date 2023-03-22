@@ -1,3 +1,4 @@
+from email.policy import default
 from sqlalchemy.sql import func
 from . import db
 from flask_login import UserMixin
@@ -11,11 +12,14 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150), nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
     username = db.Column(db.String(150),unique=True, nullable=False)
+    isadmin = db.Column(db.Boolean, default=False)
 
     def get_id(self):
         return self.user_id
     def get_username(self):
         return self.username
+    def get_isAdmin(self):
+        return self.isadmin
 
 
 class Shows(db.Model):
@@ -68,7 +72,7 @@ class TicketsBooked(db.Model):
     showname = db.Column(db.String, db.ForeignKey('shows.show_name'), nullable=False)
     venuename = db.Column(db.String, db.ForeignKey('venues.venue_name'), nullable=False)
     totalticket = db.Column(db.Integer, nullable=False)
-    show_date = db.Column(db.String, nullable=False)
+    show_date = db.Column(db.Date, nullable=False)
     
     def current_total_bookings(show_name, venue_name):
         current_total_bookings = db.session.query(func.sum(TicketsBooked.totalticket)).filter_by(
