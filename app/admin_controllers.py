@@ -1,5 +1,3 @@
-from datetime import datetime
-from platform import release
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from flask_login import login_required
 from . import db, csrf
@@ -8,10 +6,12 @@ from flask_bootstrap import Bootstrap
 from .models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
 from werkzeug.utils import secure_filename
-
+from flask_restful import Api
+from .resources.ShowsApi import ShowsAPI
 
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 # url_prefix='/admin'
+admin_apis = Api(admin_controls)
 bootstrap = Bootstrap()
 
 @admin_controls.route("/", methods=['GET', 'POST'])
@@ -86,6 +86,14 @@ def delete_venue(venue_id):
 """# ###########################################
 # show manager
 #########################################"""
+"""_summary_
+    testing shows api
+    Returns:
+        json: working status , ok , 200
+"""
+
+admin_apis.add_resource(ShowsAPI, '/api/v1/shows')
+
 
 @admin_controls.route("/show_mgmt", methods=['GET', 'POST'])
 @login_required
