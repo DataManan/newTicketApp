@@ -1,22 +1,25 @@
-from crypt import methods
-from dataclasses import dataclass
-import email
-from flask import Blueprint, json, redirect, render_template, request, flash, jsonify
+from urllib import response
+from flask import Blueprint, json, redirect, render_template, flash, jsonify
 from flask.helpers import url_for
 from flask_login import login_required, current_user
 from .models import Shows, User, TicketsBooked, Venues
 from .forms import BookShowForm, get_venue_choices, SearchForm
 from . import db
 from sqlalchemy import or_
+from .resources.ShowsApi import ShowsAPI
+from flask_restful import Api
+import requests
 
 controllers = Blueprint('controllers', __name__)
 
-
+Uapi = Api(controllers)
+Uapi.add_resource(ShowsAPI, "/api/shows")
 @controllers.route('/')
 def index():
 
-    movies = Shows.query.all()
-    return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user)
+    response = requests.get("http://127.0.0.1:5000/api/shows")
+    shows = response.json()
+    return render_template('index.html.jinja2', SHOWS=shows, current_user=current_user)
 
     
 

@@ -4,11 +4,31 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from .forms import LoginForm, RegistrationForm
-
+from functools import wraps
 
 auth = Blueprint('auth', __name__)
 login_manager = LoginManager()
 
+"""this is a decorator function to make sure that the person, entering the routes is an admin
+
+    Returns:
+        decorator: _description_
+    """
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        is_admin = False
+        if current_user.is_authenticated:
+            is_admin = current_user.isadmin
+
+        if not is_admin:
+            return "<h1>Unathorized access!</h1>", 400
+        elif is_admin:
+            return f(*args, **kwargs)
+
+    return decorated
 
 @login_manager.user_loader
 def load_user(user_id):

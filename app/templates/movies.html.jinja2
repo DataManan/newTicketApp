@@ -1,6 +1,6 @@
 <div class="col m-2 card movies__card" style="width: 12.99rem;">
-  {% if SHOW.poster_filename %}
-  <img src="static/images/{{SHOW.poster_filename}}" alt="{{SHOW.show_name}}" class="card-img-top movie__poster" method="GET">
+  {% if SHOW.show_poster %}
+  <img src="static/images/{{SHOW.show_poster}}" alt="{{SHOW.show_name}}" class="card-img-top movie__poster" method="GET">
   
   {% else %}
   <h3>
@@ -13,17 +13,17 @@
     </h5>
 
     <p class="card-text movies__tags">
-        Tags : {{SHOW.tags}}
+        Tags : {{SHOW.show_tags}}
     </p>
     <p class="card-text">
       Premiere Date : {{SHOW.premiere_date}}
     </p>
     <p class="card-text">
-      Ratings : {{SHOW.rating}}
+      Ratings : {{SHOW.show_ratings}}
     </p>
-    <p class="card-text">
+    <!-- <p class="card-text">
       Venue avialable: {{SHOW.venue_name}}
-    </p>
+    </p> -->
     
   </div>
   <a href="./book_tickets/{{user_id}}/{{SHOW.show_id}}" class="btn btn-primary movies__btn">Book Tickets</a>

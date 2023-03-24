@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
-from flask_login import login_required
+from flask_login import current_user, login_required
 from . import db, csrf
 import os
 from flask_bootstrap import Bootstrap
@@ -7,14 +7,20 @@ from .models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
 from werkzeug.utils import secure_filename
 from flask_restful import Api
-from .resources.ShowsApi import ShowsAPI
-
+from .resources.ShowsApi import ShowAPI
+from .auth import admin_required
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 # url_prefix='/admin'
 admin_apis = Api(admin_controls)
 bootstrap = Bootstrap()
 
+
+        
+
+
+
 @admin_controls.route("/", methods=['GET', 'POST'])
+@admin_required
 @login_required
 def adminhome():
     users = User.query.all()
@@ -27,6 +33,7 @@ venue manager
 """
 
 @admin_controls.route("/venue_mgmt", methods=['GET', 'POST'])
+@admin_required
 @login_required
 def venue_mgmt():
     venues = Venues.query.all()
@@ -34,6 +41,7 @@ def venue_mgmt():
 
 
 @admin_controls.route('/create_venue', methods=['GET', 'POST'])
+@admin_required
 @login_required
 def create_venue():
     add_venue = VenueForm()
@@ -57,6 +65,7 @@ def create_venue():
 
 
 @admin_controls.route('/edit_venue/<venue_id>', methods=['GET', 'POST'])
+@admin_required
 @login_required
 def edit_venue(venue_id):
     venue = Venues.query.get_or_404(venue_id)
@@ -70,6 +79,7 @@ def edit_venue(venue_id):
 
 
 @admin_controls.route('/delete_venue/<venue_id>', methods=['GET', 'POST'])
+@admin_required
 @login_required
 @csrf.exempt
 def delete_venue(venue_id):
@@ -92,17 +102,19 @@ def delete_venue(venue_id):
         json: working status , ok , 200
 """
 
-admin_apis.add_resource(ShowsAPI, '/api/v1/shows')
+admin_apis.add_resource(ShowAPI, '/api/v1/shows/<int:show_id>')
 
 
 @admin_controls.route("/show_mgmt", methods=['GET', 'POST'])
+@admin_required
 @login_required
 def show_mgmt():
     shows = Shows.query.all()
     return render_template("admin/showmgmt.html.jinja2", shows=shows)
 
 
-@admin_controls.route("/add_show", methods=['GET', 'POST'])
+@admin_controls.route("/add_show", methods=['POST'])
+@admin_required
 @login_required
 def add_show():
     addshow_form = ShowForm()
@@ -134,6 +146,7 @@ def add_show():
 
 
 @admin_controls.route('/edit_show/<int:show_id>', methods=['GET', 'POST'])
+@admin_required
 @login_required
 def edit_show(show_id):
     show = Shows.query.get_or_404(show_id)
@@ -149,6 +162,7 @@ def edit_show(show_id):
 
 
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
+@admin_required
 @login_required
 @csrf.exempt
 def delete_show(show_id):
