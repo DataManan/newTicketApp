@@ -7,7 +7,7 @@
 {% endblock styles %} {% block content %}
 <body>
   <div class="container">
-    <form action="/booknow/{{ user.user_id }}/{{ show.show_id }}" class="form-signin col-3" method="POST">
+    <form action="/booknow/{{ show.show_id }}" class="form-signin col-3" method="POST">
       <h2 class="form-signin-heading">Book Tickets</h2>
       <div class="row">
         <div class="col">

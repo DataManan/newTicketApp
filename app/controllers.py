@@ -1,6 +1,7 @@
 from crypt import methods
 from dataclasses import dataclass
-from flask import Blueprint, redirect, render_template, request, flash
+import email
+from flask import Blueprint, json, redirect, render_template, request, flash, jsonify
 from flask.helpers import url_for
 from flask_login import login_required, current_user
 from .models import Shows, User, TicketsBooked, Venues
@@ -13,18 +14,11 @@ controllers = Blueprint('controllers', __name__)
 
 @controllers.route('/')
 def index():
-    if not current_user.is_authenticated:
-        movies = Shows.query.all()
-        return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user)
 
-    return redirect(url_for('controllers.user_loggedin', user_id=current_user.user_id))
-
-
-@controllers.route('/<user_id>')
-@login_required
-def user_loggedin(user_id):
     movies = Shows.query.all()
-    return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user, user_id=user_id)
+    return render_template('index.html.jinja2', SHOWS=movies, current_user=current_user)
+
+    
 
 # seacrh bar
 
@@ -44,28 +38,21 @@ def search():
 
     return render_template('search_results.html.jinja2', shows=shows)
 
-    
 
-
- # shows = Shows.query.filter((Shows.show_name.like(f'%{search_term}%')) | (
-    #     Shows.rating.like(f'%{search_term}%')) | (Shows.tags.like(f'%{search_term}%'))).all()
-    # print(shows)
-
-@controllers.route("/book_tickets/<user_id>/<show_id>")
+@controllers.route("/book_tickets/<show_id>")
 @login_required
-def book_tickets(user_id, show_id):
-    user = User.query.get_or_404(user_id)
+def book_tickets(show_id):
+    user = User.query.get_or_404(current_user.user_id)
     movie = Shows.query.filter_by(show_id=show_id).first()
     return render_template("bookshow.html.jinja2", SHOW=movie, user=user)
 
 
-@controllers.route("/booknow/<user_id>/<show_id>", methods=['GET', 'POST'])
+@controllers.route("/booknow/<show_id>", methods=['GET', 'POST'])
 @login_required
-def booknow(user_id, show_id):
+def booknow( show_id):
     form = BookShowForm()
-    user = User.query.get_or_404(user_id)
     show = Shows.query.get_or_404(show_id)
-    form.username.data = user.username
+    form.username.data = current_user.username
     form.showname.data = show.show_name
     form.venuename.choices = get_venue_choices(show.show_name)
     if form.validate_on_submit():
@@ -74,10 +61,23 @@ def booknow(user_id, show_id):
             showname=form.showname.data,
             venuename=form.venuename.data,
             totalticket=form.totaltickets.data,
-            show_date=form.show_date.data
+            reservation_date=form.show_date.data
         )
         db.session.add(new_booking)
         db.session.commit()
-        return render_template("showsuccess.html", booking=new_booking, user=user)
+        return render_template("showsuccess.html", booking=new_booking)
 
-    return render_template("bookshowform.html.jinja2", user=user, show=show, form=form)
+    return render_template("bookshowform.html.jinja2", show=show, form=form)
+
+
+@controllers.route("/user_profile", methods=['GET', 'POST'])
+@login_required
+def get_user_profile():
+    # user = User.query.get_or_404(current_user.user_id)
+    userdata = {
+        "username" : current_user.username,
+        "first name" : current_user.first_name,
+        "last name" : current_user.last_name,
+        "email":current_user.email
+    }
+    return jsonify(userdata)

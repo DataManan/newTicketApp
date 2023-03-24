@@ -56,6 +56,9 @@ Header
     margin-right: 0.5rem;
     margin-left: 0.5rem;
 }
+.header{
+    position: relative;
+}
 /* //////////////
 Cover Image
 /////////////// */
@@ -115,7 +118,7 @@ Movies
         .movie__poster{
             box-shadow:0 5px 100px 5px rgba(243, 243, 243, 0.5);
             /* max-width: 12rem; */
-            height: 15rem;
+            max-height: 15rem;
         }
         .movies__btn{
             margin: 0rem auto 1rem auto;

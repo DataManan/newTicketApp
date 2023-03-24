@@ -3,9 +3,11 @@ from platform import release
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from flask_login import login_required
 from . import db, csrf
+import os
 from flask_bootstrap import Bootstrap
 from .models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
+from werkzeug.utils import secure_filename
 
 
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
@@ -99,16 +101,23 @@ def add_show():
     addshow_form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
         venue_name = ",".join(addshow_form.venue_name.data)
+        poster = addshow_form.poster_file.data
+        # poster_file_data = poster.read()
+        '''
+        filename = secure_filename(file.filename)'''
+        
+        postername = secure_filename(poster.filename)
+        poster.save(os.path.join('app/static/images', postername))
         new_show = Shows(
             show_name=addshow_form.show_name.data,
             venue_name = venue_name,
             ticket_price = addshow_form.ticket_price.data,
-            release_date=addshow_form.release_date.data,
+            premiere_date=addshow_form.premiere_date.data,
             rating=addshow_form.rating.data,
             tags=addshow_form.tags.data,
             show_description=addshow_form.show_description.data,
             cast=addshow_form.cast.data,
-            poster_link=addshow_form.poster_link.data
+            poster_filename = postername
         )
         db.session.add(new_show)
         db.session.commit()

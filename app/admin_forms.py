@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField, PasswordField, BooleanField
+from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField, PasswordField, BooleanField, FileField
 from wtforms.validators import InputRequired, Length, ValidationError
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
@@ -53,15 +53,14 @@ class ShowForm(FlaskForm):
     venue_name = SelectMultipleField('Venue Name', coerce=str , choices=[], option_widget=CheckboxInput(), 
                                      widget=ListWidget())
     ticket_price = IntegerField('Ticket Price', validators=[InputRequired()])
-    release_date = StringField('Release Date', validators=[
-                               InputRequired()], render_kw={"placeholder": "add date in dd/mm/YYYY format"})
-    rating = DecimalField('Ratings', places=2, validators=[InputRequired()])
-    tags = LowercaseStringField(
-        'Tags', validators=[InputRequired(), Length(min=3, max=256)])
+    premiere_date = DateField('Premiere Date', validators=[
+                               InputRequired()], render_kw={"placeholder": "add date in dd-mm-YYYY format"})
+    rating = DecimalField('Ratings', places=2, validators=[InputRequired()] ,render_kw={"placeholder": "add ratings from 0 to 10"})
+    tags = LowercaseStringField('Tags', validators=[InputRequired(), Length(min=3, max=256)])
     show_description = LowercaseStringField('Show Description', validators=[
                                       InputRequired(), Length(min=3, max=1024)])
     cast = LowercaseStringField('Cast')
-    poster_link = StringField('Poster Link')
+    poster_file = FileField('Poster file')
 
 
 """

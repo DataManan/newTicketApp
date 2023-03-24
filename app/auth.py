@@ -21,11 +21,17 @@ def user_login():
 
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user:
+        if user and user.isadmin:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
 
-                return redirect(url_for('controllers.user_loggedin', current_user=current_user, user_id= user.user_id))
+                return redirect(url_for('admin_controllers.adminhome'))
+        elif user and (not user.isadmin):
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+
+                return redirect(url_for('controllers.index'))
+        
             
         flash('user dosen\'t exists', category='error')
         return redirect(url_for('auth.user_login'))
@@ -58,9 +64,15 @@ def user_signup():
     return render_template("signup_page.html.jinja2", form=form)
 
 
-@auth.route('/<user_id>/logout')
+@auth.route('/logout')
 @login_required
-def logout(user_id):
+def logout():
     logout_user()
     # session['logged_in']=False
+    return redirect(url_for('controllers.index'))
+
+
+@auth.route('/admin/logout')
+def admin_logout():
+    logout_user()
     return redirect(url_for('controllers.index'))

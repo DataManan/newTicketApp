@@ -14,7 +14,9 @@ block title %} Create Venue {% endblock %} {% block styles %}
 
         {{ wtf.form_field(form.capacity) }}
 
-        {{ wtf.form_field(form.location) }}
+        {{ wtf.form_field(form.street) }}
+        {{ wtf.form_field(form.city) }}
+        {{ wtf.form_field(form.state) }}
 
         {{ wtf.form_field(form.tags) }}
 

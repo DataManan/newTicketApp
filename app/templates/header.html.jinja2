@@ -19,8 +19,9 @@
       <div class="user--options">
         {% if current_user.is_authenticated %}
         <!-- When logged in will only show logout button -->
-  <a href="{{user_id}}/logout" class="btn btn-primary" type="submit" style="background:rgba(242, 87,87, .7)">
+  <a href="{{user_id}}/logout" class="btn btn-secondary" type="submit" style="background:rgba(242, 87,87, .7)">
              LogOut </a>
+             <a href="{{user_id}}/user_profile" class="btn btn-primary">User Profile</a>
         {% else %}
         <!-- After logging out it will only show login and signup button  -->
             <a href="login" class="btn btn-primary" type="submit"> LogIn </a>
