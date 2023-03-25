@@ -2,11 +2,11 @@ from urllib import response
 from flask import Blueprint, json, redirect, render_template, flash, jsonify
 from flask.helpers import url_for
 from flask_login import login_required, current_user
-from ..models import Shows, User, TicketsBooked, Venues
+from ...models.models import Shows, User, TicketsBooked, Venues
 from .forms import BookShowForm, get_venue_choices, SearchForm
-from .. import db
+from ... import db
 from sqlalchemy import or_
-from ..resources.shows.ShowsApi import ShowsAPI
+from ...resources.shows.ShowsApi import ShowsAPI
 from flask_restful import Api
 import requests
 

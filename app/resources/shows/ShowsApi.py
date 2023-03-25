@@ -1,10 +1,10 @@
 from flask import jsonify
 from flask_restful import Resource
 # from .resources.shows import Shows, Show
-from ...models import Shows
+from ...models.models import Shows
 from ... import db
 from flask_login import login_required
-from ...auth import admin_required
+from ...controllers.auth import admin_required
 
 class ShowsAPI(Resource):
     def get(self):

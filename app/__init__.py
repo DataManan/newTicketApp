@@ -1,9 +1,6 @@
-from flask_restful import Api, Resource
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
-import os
-from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 import unittest
 csrf = CSRFProtect()
@@ -23,15 +20,19 @@ def create_app():
 
     db.init_app(app)
     # api = Api(app)
-    from .users.controllers import controllers
-    from .auth import auth, login_manager
-    from .admin.admin_controllers import admin_controls, bootstrap
+    from .controllers.users.controllers import controllers
+    from .controllers.auth import auth, login_manager
+    from .controllers.admin.admin_controllers import admin_controls, bootstrap
+    from .controllers.users.full_text_search import fts, fts_search
+
 
     app.register_blueprint(controllers, prefix='/')
     app.register_blueprint(auth, prefix='/')
     app.register_blueprint(admin_controls, prefix='/admin')
+    app.register_blueprint(fts, prefix='/search')
 
     bootstrap.init_app(app)
+    fts_search.init_app(app)
 
     app.app_context().push()
     create_database(app)

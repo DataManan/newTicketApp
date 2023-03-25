@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from .. import api, db
-from models import User
+from app.models.models import User
 from flask_login import current_user
 
 class UserAPI(Resource):

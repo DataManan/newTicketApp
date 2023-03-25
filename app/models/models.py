@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.sqlite import DATE, TIME
 from sqlalchemy.sql import func
 import re
-from . import db
+from .. import db
 from flask_login import UserMixin
 
 
@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
 
 class Shows(db.Model):
     __tablename__ = "shows"
+    __searchable__=['show_name', 'rating', 'tags', 'cast']
     show_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     show_name = db.Column(db.String, nullable=False)
     venue_name = db.Column(db.String, db.ForeignKey('venues.venue_name'), nullable=False)
@@ -55,12 +56,13 @@ class Shows(db.Model):
 
 class Venues(db.Model):
     __tablename__ = "venues"
+    __searchable__ = ['venue_name', 'street', 'city', 'state', 'venue_tags']
     venue_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     venue_name = db.Column(db.String(150), unique=True, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     street = db.Column(db.String(150), nullable=False)
     city = db.Column(db.String(150), nullable=False)
-    State = db.Column(db.String(150), nullable=False)
+    state = db.Column(db.String(150), nullable=False)
     venue_tags = db.Column(db.String(150))
 
     def venue_capacity(venue_name):

@@ -4,9 +4,9 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length, ValidationError
 from ..admin.admin_forms import LowercaseStringField
 from werkzeug.security import check_password_hash
-from ..models import User, TicketsBooked, Venues, Shows
+from ...models.models import User, TicketsBooked, Venues, Shows
 from sqlalchemy.sql import func
-from .. import db
+from ... import db
 
 class SignupForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])

@@ -1,27 +1,22 @@
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from flask_login import current_user, login_required
-from .. import db, csrf
+from ... import db, csrf
 import os
 from flask_bootstrap import Bootstrap
-from ..models import Venues, Shows, User
+from ...models.models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
 from werkzeug.utils import secure_filename
 from flask_restful import Api
-from ..resources.shows.ShowsApi import ShowAPI
-from ..resources.venues.venueapi import VenueApi
+from ...resources.shows.ShowsApi import ShowAPI
+from ...resources.venues.venueapi import VenueApi
 from ..auth import admin_required
 import requests
-
 
 
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 # url_prefix='/admin'
 admin_apis = Api(admin_controls)
 bootstrap = Bootstrap()
-
-
-        
-
 
 
 @admin_controls.route("/", methods=['GET', 'POST'])
@@ -31,6 +26,7 @@ def adminhome():
     users = User.query.all()
     return render_template("admin/admin_index.html.jinja2", users=users)
 
+
 """
 ##############################################
 venue manager
@@ -38,6 +34,7 @@ venue manager
 """
 
 admin_apis.add_resource(VenueApi, '/api/v1/venues/')
+
 
 @admin_controls.route("/venue_mgmt", methods=['GET', 'POST'])
 @admin_required
@@ -61,7 +58,7 @@ def create_venue():
             capacity=add_venue.capacity.data,
             street=add_venue.street.data,
             city=add_venue.city.data,
-            State=add_venue.state.data,
+            state=add_venue.state.data,
             venue_tags=add_venue.tags.data
         )
         db.session.add(new_venue)
@@ -84,7 +81,7 @@ def edit_venue(venue_id):
         edit_form.populate_obj(venue)
         db.session.commit()
         return redirect(url_for('admin_controllers.venue_mgmt'))
-    
+
     return render_template('admin/venues/venue_edit_form.html.jinja2', form=edit_form)
 
 
@@ -102,6 +99,7 @@ def delete_venue(venue_id):
     except:
         db.session.rollback()
         return redirect(url_for('admin_controllers.venue_mgmt'))
+
 
 """# ###########################################
 # show manager
@@ -123,31 +121,32 @@ def show_mgmt():
     return render_template("admin/shows/showmgmt.html.jinja2", shows=shows)
 
 
-@admin_controls.route("/add_show", methods=['GET','POST'])
+@admin_controls.route("/add_show", methods=['GET', 'POST'])
 @admin_required
 @login_required
 def add_show():
     addshow_form = ShowForm()
-    addshow_form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
+    addshow_form.venue_name.choices = [
+        (venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
         venue_name = ",".join(addshow_form.venue_name.data)
         poster = addshow_form.poster_file.data
         # poster_file_data = poster.read()
         '''
         filename = secure_filename(file.filename)'''
-        
+
         postername = secure_filename(poster.filename)
         poster.save(os.path.join('app/static/images', postername))
         new_show = Shows(
             show_name=addshow_form.show_name.data,
-            venue_name = venue_name,
-            ticket_price = addshow_form.ticket_price.data,
+            venue_name=venue_name,
+            ticket_price=addshow_form.ticket_price.data,
             premiere_date=addshow_form.premiere_date.data,
             rating=addshow_form.rating.data,
             tags=addshow_form.tags.data,
             show_description=addshow_form.show_description.data,
             cast=addshow_form.cast.data,
-            poster_filename = postername
+            poster_filename=postername
         )
         db.session.add(new_show)
         db.session.commit()
@@ -161,7 +160,8 @@ def add_show():
 def edit_show(show_id):
     show = Shows.query.get_or_404(show_id)
     form = ShowForm(obj=show)
-    form.venue_name.choices = [(venue.venue_name) for venue in Venues.query.all()]
+    form.venue_name.choices = [(venue.venue_name)
+                               for venue in Venues.query.all()]
     if form.validate_on_submit():
         form.populate_obj(show)
         show.venue_name = ",".join(form.venue_name.data)
