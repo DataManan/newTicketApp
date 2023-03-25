@@ -3,7 +3,7 @@ from .models import User
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from .forms import LoginForm, RegistrationForm
+from .users.forms import LoginForm, RegistrationForm
 from functools import wraps
 
 auth = Blueprint('auth', __name__)
@@ -24,7 +24,10 @@ def admin_required(f):
             is_admin = current_user.isadmin
 
         if not is_admin:
-            return "<h1>Unathorized access!</h1>", 400
+            # If a user who is not an admin tries to access admin pages he/she will get a error
+            # message that the route doesn't exits, but if the admin tries to access the page it opens
+            
+            return "<h1>Routes doesn't exits</h1>", 400
         elif is_admin:
             return f(*args, **kwargs)
 
@@ -57,7 +60,7 @@ def user_login():
         return redirect(url_for('auth.user_login'))
     
 
-    return render_template("login_page.html.jinja2", form=form)
+    return render_template("user/login_n_signup/login_page.html.jinja2", form=form)
     # return "<h1> Login values are invalid </h1>"
 
 
@@ -81,7 +84,7 @@ def user_signup():
         db.session.commit()
         flash('You have successfully signed up!', 'success')
         return redirect(url_for('auth.user_login'))
-    return render_template("signup_page.html.jinja2", form=form)
+    return render_template("user/login_n_signup/signup_page.html.jinja2", form=form)
 
 
 @auth.route('/logout')

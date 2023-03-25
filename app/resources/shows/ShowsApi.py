@@ -1,10 +1,10 @@
 from flask import jsonify
 from flask_restful import Resource
 # from .resources.shows import Shows, Show
-from ..models import Shows
-from .. import db
+from ...models import Shows
+from ... import db
 from flask_login import login_required
-from ..auth import admin_required
+from ...auth import admin_required
 
 class ShowsAPI(Resource):
     def get(self):
@@ -45,7 +45,7 @@ class ShowAPI(Resource):
             }
             return jsonify(showdata)
         except:
-            return {"error":"user doesn\'t exist"}, 404
+            return {"error":"show doesn\'t exist"}, 404
 
 
     def post(self, show_obj):

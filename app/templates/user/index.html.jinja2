@@ -13,7 +13,7 @@
 </head>
 <body>
     <div>
-    {% include "header.html.jinja2" %}
+    {% include "user/header.html.jinja2" %}
    
       </div>
     <div class="cover_image">
@@ -28,7 +28,7 @@
         </h1>
         <div class="movies row row-sm">
             {% for SHOW in SHOWS %} 
-            {% include "movies.html.jinja2" %}
+            {% include "user/movies.html.jinja2" %}
             {% endfor %}
         </div>
     </div>

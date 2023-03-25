@@ -23,9 +23,9 @@ def create_app():
 
     db.init_app(app)
     # api = Api(app)
-    from .controllers import controllers
+    from .users.controllers import controllers
     from .auth import auth, login_manager
-    from .admin_controllers import admin_controls, bootstrap
+    from .admin.admin_controllers import admin_controls, bootstrap
 
     app.register_blueprint(controllers, prefix='/')
     app.register_blueprint(auth, prefix='/')

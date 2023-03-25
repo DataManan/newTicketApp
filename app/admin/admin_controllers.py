@@ -1,14 +1,19 @@
 from flask import Blueprint, Flask, render_template, url_for, redirect, flash
 from flask_login import current_user, login_required
-from . import db, csrf
+from .. import db, csrf
 import os
 from flask_bootstrap import Bootstrap
-from .models import Venues, Shows, User
+from ..models import Venues, Shows, User
 from .admin_forms import VenueForm, ShowForm
 from werkzeug.utils import secure_filename
 from flask_restful import Api
-from .resources.ShowsApi import ShowAPI
-from .auth import admin_required
+from ..resources.shows.ShowsApi import ShowAPI
+from ..resources.venues.venueapi import VenueApi
+from ..auth import admin_required
+import requests
+
+
+
 admin_controls = Blueprint('admin_controllers', __name__, url_prefix='/admin')
 # url_prefix='/admin'
 admin_apis = Api(admin_controls)
@@ -32,12 +37,17 @@ venue manager
 ##############################################
 """
 
+admin_apis.add_resource(VenueApi, '/api/v1/venues/')
+
 @admin_controls.route("/venue_mgmt", methods=['GET', 'POST'])
 @admin_required
 @login_required
 def venue_mgmt():
-    venues = Venues.query.all()
-    return render_template("admin/venuemgmt.html.jinja2", venues=venues)
+    # http://127.0.0.1:5000/api/shows
+    response = requests.get("http://127.0.0.1:5000/admin/api/v1/venues")
+
+    venues = response.json()
+    return render_template("admin/venues/venuemgmt.html.jinja2", venues=venues)
 
 
 @admin_controls.route('/create_venue', methods=['GET', 'POST'])
@@ -61,7 +71,7 @@ def create_venue():
 
         return redirect(url_for('admin_controllers.venue_mgmt'))
 
-    return render_template('admin/addvenueform.html.jinja2', form=add_venue)
+    return render_template('admin/venues/addvenueform.html.jinja2', form=add_venue)
 
 
 @admin_controls.route('/edit_venue/<venue_id>', methods=['GET', 'POST'])
@@ -75,7 +85,7 @@ def edit_venue(venue_id):
         db.session.commit()
         return redirect(url_for('admin_controllers.venue_mgmt'))
     
-    return render_template('admin/venue_edit_form.html.jinja2', form=edit_form)
+    return render_template('admin/venues/venue_edit_form.html.jinja2', form=edit_form)
 
 
 @admin_controls.route('/delete_venue/<venue_id>', methods=['GET', 'POST'])
@@ -110,10 +120,10 @@ admin_apis.add_resource(ShowAPI, '/api/v1/shows/<int:show_id>')
 @login_required
 def show_mgmt():
     shows = Shows.query.all()
-    return render_template("admin/showmgmt.html.jinja2", shows=shows)
+    return render_template("admin/shows/showmgmt.html.jinja2", shows=shows)
 
 
-@admin_controls.route("/add_show", methods=['POST'])
+@admin_controls.route("/add_show", methods=['GET','POST'])
 @admin_required
 @login_required
 def add_show():
@@ -142,7 +152,7 @@ def add_show():
         db.session.add(new_show)
         db.session.commit()
         return redirect(url_for("admin_controllers.show_mgmt"))
-    return render_template("admin/addshowform.html.jinja2", form=addshow_form)
+    return render_template("admin/shows/addshowform.html.jinja2", form=addshow_form)
 
 
 @admin_controls.route('/edit_show/<int:show_id>', methods=['GET', 'POST'])
@@ -164,7 +174,6 @@ def edit_show(show_id):
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
 @admin_required
 @login_required
-@csrf.exempt
 def delete_show(show_id):
     show = Shows.query.get_or_404(show_id)
     db.session.delete(show)

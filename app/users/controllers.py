@@ -2,11 +2,11 @@ from urllib import response
 from flask import Blueprint, json, redirect, render_template, flash, jsonify
 from flask.helpers import url_for
 from flask_login import login_required, current_user
-from .models import Shows, User, TicketsBooked, Venues
+from ..models import Shows, User, TicketsBooked, Venues
 from .forms import BookShowForm, get_venue_choices, SearchForm
-from . import db
+from .. import db
 from sqlalchemy import or_
-from .resources.ShowsApi import ShowsAPI
+from ..resources.shows.ShowsApi import ShowsAPI
 from flask_restful import Api
 import requests
 
@@ -19,7 +19,7 @@ def index():
 
     response = requests.get("http://127.0.0.1:5000/api/shows")
     shows = response.json()
-    return render_template('index.html.jinja2', SHOWS=shows, current_user=current_user)
+    return render_template('user/index.html.jinja2', SHOWS=shows, current_user=current_user)
 
     
 
@@ -39,7 +39,7 @@ def search():
         Shows.tags.ilike(f'%{search_term}%')
     )).all()
 
-    return render_template('search_results.html.jinja2', shows=shows)
+    return render_template('user/search_results.html.jinja2', shows=shows)
 
 
 @controllers.route("/book_tickets/<show_id>")
@@ -47,7 +47,7 @@ def search():
 def book_tickets(show_id):
     user = User.query.get_or_404(current_user.user_id)
     movie = Shows.query.filter_by(show_id=show_id).first()
-    return render_template("bookshow.html.jinja2", SHOW=movie, user=user)
+    return render_template("user/booking/bookshow.html.jinja2", SHOW=movie, user=user)
 
 
 @controllers.route("/booknow/<show_id>", methods=['GET', 'POST'])
@@ -68,9 +68,9 @@ def booknow( show_id):
         )
         db.session.add(new_booking)
         db.session.commit()
-        return render_template("showsuccess.html", booking=new_booking)
+        return render_template("user/booking/showsuccess.html", booking=new_booking)
 
-    return render_template("bookshowform.html.jinja2", show=show, form=form)
+    return render_template("user/booking/bookshowform.html.jinja2", show=show, form=form)
 
 
 @controllers.route("/user_profile", methods=['GET', 'POST'])
