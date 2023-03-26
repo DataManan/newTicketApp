@@ -65,6 +65,7 @@ class Venues(db.Model):
     state = db.Column(db.String(150), nullable=False)
     venue_tags = db.Column(db.String(150))
 
+    # @classmethod
     def venue_capacity(venue_name):
         venue = Venues.query.filter_by(venue_name=venue_name).first()
         print(venue)
@@ -72,7 +73,11 @@ class Venues(db.Model):
             return venue.capacity
         else:
             return 0
-    
+    @classmethod
+    def __repr__(self):
+        return '<Venue:{}>'.format(self.venue_name)
+
+
 class TicketsBooked(db.Model):
     __tablename__="ticket_booked"
     booking_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

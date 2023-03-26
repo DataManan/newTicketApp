@@ -11,7 +11,7 @@ DB_NAME = "database.sqlite3"
 
 def create_app():
 
-    app = Flask(__name__, static_url_path='/static')
+    app = Flask(__name__, static_url_path='/static', template_folder='templates')
 
     app.config['SECRET_KEY'] = "THISWASSUPPOSEDTOBEASECRET"
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/myticketDB.db"
@@ -25,6 +25,7 @@ def create_app():
     from .controllers.admin.admin_controllers import admin_controls, bootstrap
     from .controllers.users.full_text_search import fts, fts_search
 
+    fts_search.init_app(app)
 
     app.register_blueprint(controllers, prefix='/')
     app.register_blueprint(auth, prefix='/')
@@ -32,7 +33,7 @@ def create_app():
     app.register_blueprint(fts, prefix='/search')
 
     bootstrap.init_app(app)
-    fts_search.init_app(app)
+    
 
     app.app_context().push()
     create_database(app)

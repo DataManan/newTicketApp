@@ -14,22 +14,55 @@
     <link rel="stylesheet" href="../static/styles/index.style.css" />
   </head>
   <body>
-    <div>{% include "header.html.jinja2" %}</div>
+    <div>{% include "user/header.html.jinja2" %}</div>
 
-    <div>
-      <h1>Search Results</h1>
-      {{shows}}
+    <div class="container p-5 m-5">
+      <h1>Search Results for {{ q }}</h1>
+      <!-- {{ shows }} -->
       {% if shows %}
       <h2>Shows:</h2>
-      <ul>
+      <div>
         {% for show in shows %}
-        <li>
-          {{ shows.show_name }} at {{ shows.venue_name }} -
-          {{ shows.release_date }}
-        </li>
+        <div style="max-height: 100;">{% include "user/movies.html.jinja2" %}</div>
         {% endfor %}
+      </div>
+      {% endif %}
+      <!-- {{ venues }} -->
+      {% if venues %}
+      <h2>Venues</h2>
+      <ul>
+        <div class="row">
+        {% for venue in venues %}
+        <!--  -->
+        
+
+        <div class="card col venue__card m-2 p-2" style="max-width: 18rem">
+          <div class="card-body" style="text-align: center">
+            <h5 class="card-title display-6">
+              {{ venue.venue_name }}
+            </h5>
+            <p class="card-text">
+              {{ venue.capacity }}
+            </p>
+            <p class="card-text">
+              {{ venue.street }} ,
+
+              {{ venue.city }} ,
+
+              {{ venue.state }}
+            </p>
+            <p class="card-text">
+              {{ venue.venue_tags }}
+            </p>
+          </div>
+        </div>
+        
+        <!--  -->
+        {% endfor %}
+        </div>
       </ul>
       {% endif %}
+      <a href="/" class="btn btn-success">Go Back</a>
     </div>
 
     <script

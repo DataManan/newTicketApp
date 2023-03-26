@@ -8,7 +8,7 @@
 <div class="container m-5">
   <div class="row">
     <div class="col-3">
-      <form class="form-signin" method="POST">
+      <form class="form-signin" method="POST" enctype="multipart/form-data">
         <h2 class="form-signin-heading">Add Show</h2>
         {{ form.hidden_tag() }}
 
@@ -36,7 +36,7 @@
 
         {{ wtf.form_field(form.cast) }}
 
-        {{ wtf.form_field(form.poster_link) }}
+        {{ wtf.form_field(form.poster_file) }}
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">
           Submit

@@ -41,9 +41,9 @@ admin_apis.add_resource(VenueApi, '/api/v1/venues/')
 @login_required
 def venue_mgmt():
     # http://127.0.0.1:5000/api/shows
-    response = requests.get("http://127.0.0.1:5000/admin/api/v1/venues")
+    # response = requests.get("http://127.0.0.1:5000/admin/api/v1/venues")
 
-    venues = response.json()
+    venues = Venues.query.all()
     return render_template("admin/venues/venuemgmt.html.jinja2", venues=venues)
 
 
@@ -130,13 +130,11 @@ def add_show():
         (venue.venue_name) for venue in Venues.query.all()]
     if addshow_form.validate_on_submit():
         venue_name = ",".join(addshow_form.venue_name.data)
-        poster = addshow_form.poster_file.data
-        # poster_file_data = poster.read()
-        '''
-        filename = secure_filename(file.filename)'''
 
+        poster = addshow_form.poster_file.data
         postername = secure_filename(poster.filename)
-        poster.save(os.path.join('app/static/images', postername))
+        if poster:            
+            poster.save(os.path.join('app/static/images', postername))
         new_show = Shows(
             show_name=addshow_form.show_name.data,
             venue_name=venue_name,
@@ -163,12 +161,18 @@ def edit_show(show_id):
     form.venue_name.choices = [(venue.venue_name)
                                for venue in Venues.query.all()]
     if form.validate_on_submit():
+        poster = form.poster_file.data
+        
+        if poster:
+            postername = secure_filename(poster.filename)
+            poster.save(os.path.join('app/static/images', postername))
         form.populate_obj(show)
         show.venue_name = ",".join(form.venue_name.data)
+        show.poster_filename=postername
         db.session.commit()
         return redirect(url_for('admin_controllers.show_mgmt'))
 
-    return render_template('admin/edit_show.html.jinja2', form=form, show=show)
+    return render_template('admin/shows/edit_show.html.jinja2', form=form, show=show)
 
 
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])

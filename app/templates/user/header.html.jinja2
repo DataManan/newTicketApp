@@ -3,9 +3,9 @@
   <nav class="navbar" style="background-color: rgba(3, 15, 38, 1)">
     <!-- Navbar content -->
     <div class="container-fluid">
-      <a class="navbar-brand" style="color: rgba(242, 242, 242, 1)">MyTicket</a>
-    
-    <form class="d-flex" role="search" method="get" action="{{ url_for('controllers.search') }}">
+      <a class="navbar-brand" style="color: rgba(242, 242, 242, 1)"   href="/" >MyTicket</a>
+
+      <!-- <form class="d-flex" role="search" method="get" action="{{ url_for('full_text_search.fullTextSearch') }}">
       
         <input
           class="form-control me-2"
@@ -15,22 +15,43 @@
         />
         <button class="btn btn-success" type="submit">Search</button>
         
+      </form> -->
+      <form action="{{ url_for('full_text_search.fullTextSearch') }}" method="GET" class="d-flex" role="search">
+        <input type="text" name="q" placeholder="Search..." class="form-control me-2" type="search"/>
+        <button type="submit" class="btn btn-success">Search</button>
       </form>
+
       <div class="user--options">
         {% if current_user.is_authenticated %}
         <!-- When logged in will only show logout button -->
-  <a href="{{user_id}}/logout" class="btn btn-secondary" type="submit" style="background:rgba(242, 87,87, .7)">
-             LogOut </a>
-             <a href="{{user_id}}/user_profile" class="btn btn-primary">User Profile</a>
+        <a
+          href="/logout"
+          class="btn btn-secondary"
+          type="submit"
+          style="background: rgba(242, 87, 87, 0.7)"
+        >
+          LogOut
+        </a>
+          {% if current_user.isadmin %}
+            <a href="{{ url_for('admin_controllers.adminhome') }}" class="btn btn-primary">Admin Profile</a>
+          {% else %}
+            <a href="/user_profile" class="btn btn-primary">User Profile</a>
+          {% endif %}
         {% else %}
         <!-- After logging out it will only show login and signup button  -->
-            <a href="login" class="btn btn-primary" type="submit"> LogIn </a>
-            
-            <a href="./signup" class="btn btn-success" style="background: rgba(242, 87, 87, 1)" type="submit">
-              SignUp
-            </a>
+        <a href="login" class="btn btn-primary" type="submit"> LogIn </a>
+
+        <a
+          href="./signup"
+          class="btn btn-success"
+          style="background: rgba(242, 87, 87, 1)"
+          type="submit"
+        >
+          SignUp
+        </a>
         {% endif %}
       </div>
+      
     </div>
   </nav>
 </div>

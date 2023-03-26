@@ -20,21 +20,23 @@
     <!-- /////////// -->
   </head>
   <body>
-    <div>{% include "header.html.jinja2" %}</div>
+    <div>{% include "user/header.html.jinja2" %}</div>
     <div class="container-fluid show__container">
       <div class="row">
         <!-- poster column -->
         <div class="col-3">
-          {% if SHOW.poster_link %}
+          {% if show.poster_filename %}
+          {{ show.show_poster }}
+          <!-- GET /static/images/%7B%7Bshow.poster_filename%7D%7D HTTP/1.1" 404 -->
           <img
-            src="{{ SHOW.poster_link }}"
-            alt="{{ SHOW.show_name }}"
+            src= "static/images/{{ show.show_poster }}"
+            alt="{{ show.show_name }}"
             class="card-img-top show--poster"
           />
           {% else %}
           <img
             src="{{ url_for('static', filename='images/no-poster.png') }}"
-            alt="{{ SHOW.show_name }}"
+            alt="{{ show.show_name }}"
             class="card-img-top show--poster"
           />
           {% endif %}
@@ -42,28 +44,30 @@
         <!-- show description column -->
         <div class="col-9 show--col">
           <div class="show--title lead">
-            {{ SHOW.show_name }}
+            {{ show.show_name }}
           </div>
           <div class="show--tags">
-            {% for tag in SHOW.tags.split(',') %}
+            {% for tag in show.tags.split(',') %}
             <span class="show--tag">
               {{ tag }}
             </span>
             {% endfor %}
           </div>
-          <div class="show--ratings">{{ SHOW.rating }}/10</div>
+          <div class="show--ratings">{{ show.rating }}/10</div>
           <div class="show--release-date">
-            {{ SHOW.release_date }}
+            {{ show.release_date }}
           </div>
           <div class="show--descp">
-            {{ SHOW.show_description }}
+            {{ show.show_description }}
           </div>
           <div class="show--cast">
-            {{ SHOW.cast }}
+            {{ show.cast }}
           </div>
 
           <div>
-            <a class="btn btn-light" href="/booknow/{{SHOW.show_id}}">Book Now</a>
+            <a class="btn btn-light" href="/booknow/{{ show.show_id }}"
+              >Book Now</a
+            >
           </div>
         </div>
         <!-- column ends here -->
@@ -77,7 +81,6 @@
       crossorigin="anonymous"
     ></script>
 
-    
     <!-- ///////////////////// -->
   </body>
 </html>

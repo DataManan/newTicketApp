@@ -1,9 +1,7 @@
-from urllib import response
 from flask import Blueprint, json, redirect, render_template, flash, jsonify
-from flask.helpers import url_for
 from flask_login import login_required, current_user
-from ...models.models import Shows, User, TicketsBooked, Venues
-from .forms import BookShowForm, get_venue_choices, SearchForm
+from ...models.models import Shows, User, TicketsBooked
+from .forms import BookShowForm, get_venue_choices
 from ... import db
 from sqlalchemy import or_
 from ...resources.shows.ShowsApi import ShowsAPI
@@ -14,6 +12,8 @@ controllers = Blueprint('controllers', __name__)
 
 Uapi = Api(controllers)
 Uapi.add_resource(ShowsAPI, "/api/shows")
+
+
 @controllers.route('/')
 def index():
 
@@ -21,38 +21,17 @@ def index():
     shows = response.json()
     return render_template('user/index.html.jinja2', SHOWS=shows, current_user=current_user)
 
-    
-
-# seacrh bar
-
-
-@controllers.route('/search', methods=['GET', 'POST'])
-def search():
-    form = SearchForm()
-
-    
-    search_term = form.search.data
-
-    shows = Shows.query.filter(or_(
-        Shows.show_name.ilike(f'%{search_term}%'),
-        Shows.rating.ilike(f'%{search_term}%'),
-        Shows.tags.ilike(f'%{search_term}%')
-    )).all()
-
-    return render_template('user/search_results.html.jinja2', shows=shows)
-
 
 @controllers.route("/book_tickets/<show_id>")
 @login_required
 def book_tickets(show_id):
-    user = User.query.get_or_404(current_user.user_id)
-    movie = Shows.query.filter_by(show_id=show_id).first()
-    return render_template("user/booking/bookshow.html.jinja2", SHOW=movie, user=user)
+    show = Shows.query.filter_by(show_id=show_id).first()
+    return render_template("user/booking/bookshow.html.jinja2", show=show)
 
 
 @controllers.route("/booknow/<show_id>", methods=['GET', 'POST'])
 @login_required
-def booknow( show_id):
+def booknow(show_id):
     form = BookShowForm()
     show = Shows.query.get_or_404(show_id)
     form.username.data = current_user.username
@@ -78,9 +57,9 @@ def booknow( show_id):
 def get_user_profile():
     # user = User.query.get_or_404(current_user.user_id)
     userdata = {
-        "username" : current_user.username,
-        "first name" : current_user.first_name,
-        "last name" : current_user.last_name,
-        "email":current_user.email
+        "username": current_user.username,
+        "first name": current_user.first_name,
+        "last name": current_user.last_name,
+        "email": current_user.email
     }
     return jsonify(userdata)
