@@ -59,6 +59,11 @@ Header
 .header{
     position: relative;
 }
+.header a.navbar-brand{
+    font-size: 1.75rem;
+    font-weight: var(--w-heavy);
+    margin: 0;
+}
 /* //////////////
 Cover Image
 /////////////// */

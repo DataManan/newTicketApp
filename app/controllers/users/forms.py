@@ -8,6 +8,18 @@ from ...models.models import User, TicketsBooked, Venues, Shows
 from sqlalchemy.sql import func
 from ... import db
 
+
+# custom validators
+def check_password(form, field):
+    user = User.query.get_or_404(form.username)
+    if not check_password_hash(field.data, user.password):
+        raise ValidationError("Incorrect Password")
+
+
+def verify_user(form, field):
+    user = User.query.filter_by(username=field.data).first()
+    if not user:
+        raise ValidationError("user does not exist")
 class SignupForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -19,10 +31,9 @@ class SignupForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[
-                           InputRequired(), Length(min=4, max=16)])
-    password = PasswordField('password', validators=[
-                             InputRequired(), Length(min=8, max=150)])
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=16), verify_user], render_kw={"placeholder":"enter your username"})
+    password = PasswordField('password', validators=[InputRequired(), Length(
+        min=8, max=150)], render_kw={"placeholder": "enter your password"})
     remember = BooleanField('remember me')
 
 
@@ -48,17 +59,6 @@ class RegistrationForm(FlaskForm):
                              InputRequired(), Length(min=8, max=80), EqualTo('cpassword', message='Passwords don\'t match')])
     cpassword = PasswordField('Confirm password', validators=[
                              InputRequired(), Length(min=8, max=80)])
-
-
-def check_password(form, field):
-        user = User.query.get_or_404(form.username)
-        if not check_password_hash(field.data, user.password):
-            raise ValidationError("Incorrect Password")
-        
-def verify_user(form, field):
-     user = User.query.filter_by(username=field.data).first()
-     if not user:
-          raise ValidationError("user does not exist")
 
 
 def ticket_avialable(form, field):

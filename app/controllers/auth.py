@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from .users.forms import LoginForm, RegistrationForm
 from functools import wraps
-
+import datetime
 auth = Blueprint('auth', __name__)
 login_manager = LoginManager()
 
@@ -41,12 +41,12 @@ def load_user(user_id):
 @auth.route("/login", methods=['GET', 'POST'])
 def user_login():
     form = LoginForm()
-
+    duration = datetime.timedelta(minutes=30)
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.isadmin:
             if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
+                login_user(user, remember=form.remember.data, duration=duration)
 
                 return redirect(url_for('admin_controllers.adminhome'))
         elif user and (not user.isadmin):

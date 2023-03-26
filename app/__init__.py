@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_wtf.csrf import CSRFProtect
 import unittest
+from .config import LocalDevelopmentConfig
 csrf = CSRFProtect()
 db = SQLAlchemy()
-DB_NAME = "database.sqlite3"
+DB_NAME = "myticketDB.db"
 
 
 
@@ -13,8 +14,7 @@ def create_app():
 
     app = Flask(__name__, static_url_path='/static', template_folder='templates')
 
-    app.config['SECRET_KEY'] = "THISWASSUPPOSEDTOBEASECRET"
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/myticketDB.db"
+    app.config.from_object(LocalDevelopmentConfig)
     app.config['TESTING'] = True
     client = app.test_client()
 
@@ -33,7 +33,7 @@ def create_app():
     app.register_blueprint(fts, prefix='/search')
 
     bootstrap.init_app(app)
-    
+    app.logger.info(LocalDevelopmentConfig.SQLITE_DB_DIR)
 
     app.app_context().push()
     create_database(app)

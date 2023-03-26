@@ -12,6 +12,7 @@ class Config():
 
 
 class LocalDevelopmentConfig(Config):
-    SQLITE_DB_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)) + "/app")
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(SQLITE_DB_DIR, "myticketDB.sqlite3")
+    SQLITE_DB_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)) + "/database")
+    # print(SQLITE_DB_DIR)
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(SQLITE_DB_DIR, "myticketDB.db")
     DEBUG = True
