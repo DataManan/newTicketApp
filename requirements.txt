@@ -17,6 +17,7 @@ Flask-RESTful==0.3.9
 Flask-Select2==0.1
 Flask-SQLAlchemy==3.0.3
 flask-swagger-ui==4.11.1
+flask-whooshee==0.8.2
 -e git+https://github.com/wtforms/flask-wtf@7e65c3a00ee21ecc7d8134fd3b4d2ef1d7e21970#egg=Flask_WTF
 greenlet==2.0.2
 idna==3.4

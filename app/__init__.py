@@ -14,10 +14,6 @@ def create_app():
 
     app = Flask(__name__, static_url_path='/static', template_folder='templates')
 
-    # app.config['SECRET_KEY'] = "THISWASSUPPOSEDTOBEASECRET"
-    # app.config['SQLALCHEMY_DATABASE_URI'] = LocalDevelopmentConfig.SQLALCHEMY_DATABASE_URI
-    # "sqlite:////mnt/f/data and algo/IITMadras/app-dev/MyTicket2.0/myticket2/app/myticketDB.db"
-    # f'sqlite:///{DB_NAME}'
     app.config.from_object(LocalDevelopmentConfig)
     app.config['TESTING'] = True
     client = app.test_client()
@@ -37,7 +33,7 @@ def create_app():
     app.register_blueprint(fts, prefix='/search')
 
     bootstrap.init_app(app)
-    app.logger.info(LocalDevelopmentConfig.SQLITE_DB_DIR)
+    # app.logger.info(LocalDevelopmentConfig.SQLITE_DB_DIR)
 
     app.app_context().push()
     create_database(app)
@@ -49,7 +45,7 @@ def create_app():
 
 
 def create_database(app):
-    if not path.exists('app/' + DB_NAME):
+    if not path.exists('app/database' + DB_NAME):
         db.create_all()
         print('Database Created!')
 
