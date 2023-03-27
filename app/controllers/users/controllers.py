@@ -17,8 +17,8 @@ Uapi.add_resource(ShowsAPI, "/api/shows")
 @controllers.route('/')
 def index():
 
-    response = requests.get("http://127.0.0.1:5000/api/shows")
-    shows = response.json()
+    # response = requests.get("http://127.0.0.1:5000/api/shows")
+    shows = Shows.query.all()
     return render_template('user/index.html.jinja2', SHOWS=shows, current_user=current_user)
 
 

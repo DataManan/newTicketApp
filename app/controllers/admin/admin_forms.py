@@ -51,10 +51,12 @@ class ShowForm(FlaskForm):
 
     show_name = LowercaseStringField('Show Name', validators=[
                                      InputRequired(), Length(min=3, max=256)])
-    venue_name = SelectMultipleField('Venue Name', coerce=str, choices=[], option_widget=CheckboxInput(),
+    venues = SelectMultipleField('Venue Name', coerce=str, choices=[], option_widget=CheckboxInput(),
                                      widget=ListWidget())
-    ticket_price = IntegerField('Ticket Price', validators=[InputRequired()])
+    ticket_price = DecimalField('Ticket Price', validators=[InputRequired()])
     premiere_date = DateField('Premiere Date', validators=[
+        InputRequired()], render_kw={"placeholder": "add date in dd-mm-YYYY format"})
+    end_date = DateField('End Date', validators=[
         InputRequired()], render_kw={"placeholder": "add date in dd-mm-YYYY format"})
     rating = DecimalField('Ratings', places=2, validators=[
                           InputRequired()], render_kw={"placeholder": "add ratings from 0 to 10"})

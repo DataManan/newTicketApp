@@ -16,10 +16,10 @@
 
         <div class="venue__container">
           <p>
-            {{ form.venue_name.label }}
+            {{ form.venues.label }}
           </p>
           <div class="select-multiple-sidebar">
-            {{ (form.venue_name) }}
+            {{ (form.venues) }}
           </div>
           
         </div>
@@ -27,6 +27,8 @@
         {{ wtf.form_field(form.ticket_price) }}
 
         {{ wtf.form_field(form.premiere_date) }}
+
+        {{ wtf.form_field(form.end_date) }}
 
         {{ wtf.form_field(form.rating) }}
 
