@@ -21,9 +21,9 @@
       <!-- {{ shows }} -->
       {% if shows %}
       <h2>Shows:</h2>
-      <div>
+      <div class="row">
         {% for show in shows %}
-        <div style="max-height: 100;">{% include "user/movies.html.jinja2" %}</div>
+        <div class="col" style="max-height: 100;">{% include "user/movies.html.jinja2" %}</div>
         {% endfor %}
       </div>
       {% endif %}

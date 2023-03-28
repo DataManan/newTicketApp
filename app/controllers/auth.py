@@ -3,7 +3,7 @@ from ..models.models import User
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from .users.forms import LoginForm, RegistrationForm
+from .users.forms import LoginForm, RegistrationForm, AdminLoginForm
 from functools import wraps
 import datetime
 auth = Blueprint('auth', __name__)
@@ -38,18 +38,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+duration = datetime.timedelta(minutes=30)
+
 @auth.route("/login", methods=['GET', 'POST'])
 def user_login():
     form = LoginForm()
-    duration = datetime.timedelta(minutes=30)
+    
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.isadmin:
-            if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data, duration=duration)
-
-                return redirect(url_for('admin_controllers.adminhome'))
-        elif user and (not user.isadmin):
+        if user :
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
 
@@ -62,6 +59,18 @@ def user_login():
 
     return render_template("user/login_n_signup/login_page.html.jinja2", form=form)
     # return "<h1> Login values are invalid </h1>"
+
+@auth.route("/admin_login", methods=['GET', 'POST'])
+def admin_login():
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.isadmin:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data, duration=duration)
+                return redirect(url_for('admin_controllers.adminhome'))
+            
+    return render_template('admin/admin_login_form.html.jinja2', form=form)
 
 
 @auth.route("/signup", methods=['GET', 'POST'])

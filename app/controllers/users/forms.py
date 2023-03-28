@@ -37,6 +37,15 @@ class LoginForm(FlaskForm):
     remember = BooleanField('remember me')
 
 
+class AdminLoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(
+        min=4, max=16), verify_user], render_kw={"placeholder": "enter your username"})
+    password = PasswordField('password', validators=[InputRequired(), Length(
+        min=8, max=150)], render_kw={"placeholder": "enter your password"})
+    isAdmin = BooleanField('Admin')
+    remember = BooleanField('remember me')
+
+
 class SearchForm(FlaskForm):
     search = StringField('Search')
     submit = SubmitField('Search')

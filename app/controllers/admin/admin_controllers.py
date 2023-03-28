@@ -118,13 +118,15 @@ admin_apis.add_resource(ShowAPI, '/api/v1/shows/<int:show_id>')
 @login_required
 def show_mgmt():
     shows = Shows.query.all()
-    venues = []
+    venues = {}
     for show in shows:
         venue_shows = ShowsInVenues.query.filter_by(show_id=show.show_id).all()
         current_app.logger.info(venue_shows)
+        venues[show.show_id] = []
         for venue_show in venue_shows:
             venue = Venues.query.filter_by(venue_id=venue_show.venue_id).first()
-            venues.append(str(venue.venue_name))
+            venues[show.show_id].append(venue.venue_name)
+            current_app.logger.info(venues[show.show_id])
     current_app.logger.info(venues)
     return render_template("admin/shows/showmgmt.html.jinja2", shows=shows, venues=venues)
 
@@ -252,9 +254,13 @@ def edit_show(show_id):
 @admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
 @admin_required
 @login_required
-# @csrf.exempt
+@csrf.exempt
 def delete_show(show_id):
     show = Shows.query.get_or_404(show_id)
+    delete_rows = ShowsInVenues.query.filter_by(show_id=show_id).all()
+    for row in delete_rows:
+        db.session.delete(row)
+        db.session.commit()
     db.session.delete(show)
     db.session.commit()
     return redirect(url_for('admin_controllers.show_mgmt'))

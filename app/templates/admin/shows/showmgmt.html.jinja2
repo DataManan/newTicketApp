@@ -21,6 +21,7 @@
               <th scope="col">{{ "Venue Name" }}</th>
               <th scope="col">{{ "Ticket Price  " }}</th>
               <th scope="col">{{ "Premiere Date" }}</th>
+              <th scope="col">{{ "End Date" }}</th>
               <th scope="col">{{ "Rating" }}</th>
               <th scope="col" >{{ "Show Description" }}</th>
               <th scope="col">{{ "Cast" }}</th>
@@ -34,12 +35,14 @@
               <th scope="row">{{ show.show_id }}</th>
               <td>{{ show.show_name }}</td>
               <td style="max-width: 10rem;">
-                {% for venue in venues%}
+                <!-- {{venues}} -->
+                {% for venue in venues[show.show_id] %}
                 {{venue}} <br />
                 {% endfor %}
               </td>
               <td>Rs. {{ show.ticket_price }}</td>
               <td>{{ show.premiere_date }}</td>
+              <td>{{ show.end_date }}</td>
               <td>{{ show.rating }}</td>
               <td style=" margin: 1rem; max-width: 10rem;">{{ show.show_description }}</td>
               <td style="max-width: 10rem;">{{show.cast}}</td>

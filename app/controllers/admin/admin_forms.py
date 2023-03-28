@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, DecimalField, DateField, SelectField, DateTimeField, validators, SelectMultipleField, PasswordField, BooleanField, FileField
-from wtforms.validators import InputRequired, Length, ValidationError
+from wtforms.validators import InputRequired, Length, NumberRange,ValidationError
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from flask_admin.form.widgets import Select2Widget
@@ -58,8 +58,8 @@ class ShowForm(FlaskForm):
         InputRequired()], render_kw={"placeholder": "add date in dd-mm-YYYY format"})
     end_date = DateField('End Date', validators=[
         InputRequired()], render_kw={"placeholder": "add date in dd-mm-YYYY format"})
-    rating = DecimalField('Ratings', places=2, validators=[
-                          InputRequired()], render_kw={"placeholder": "add ratings from 0 to 10"})
+    rating = DecimalField('Ratings', places=2, validators=[InputRequired(), NumberRange(min=1, max=10, message="ratings has to be in a range between 1 to 10")],
+                           render_kw={"placeholder": "add ratings from 1 to 10"})
     tags = LowercaseStringField(
         'Tags', validators=[InputRequired(), Length(min=3, max=256)])
     show_description = LowercaseStringField('Show Description', validators=[

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from ...models.models import Shows, User, TicketsBooked
 from .forms import BookShowForm, get_venue_choices
 from ... import db
-from sqlalchemy import or_
+from sqlalchemy import or_, true
 from ...resources.shows.ShowsApi import ShowsAPI
 from flask_restful import Api
 import requests
@@ -18,7 +18,8 @@ Uapi.add_resource(ShowsAPI, "/api/shows")
 def index():
 
     # response = requests.get("http://127.0.0.1:5000/api/shows")
-    shows = Shows.query.all()
+    shows = Shows.query.order_by(Shows.show_id.desc()).all()
+    shows
     return render_template('user/index.html.jinja2', SHOWS=shows, current_user=current_user)
 
 
