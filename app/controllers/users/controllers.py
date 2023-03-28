@@ -36,7 +36,7 @@ def booknow(show_id):
     show = Shows.query.get_or_404(show_id)
     form.username.data = current_user.username
     form.showname.data = show.show_name
-    form.venuename.choices = get_venue_choices(show.show_name)
+    form.venuename.choices = get_venue_choices(show_id)
     if form.validate_on_submit():
         new_booking = TicketsBooked(
             username=form.username.data,

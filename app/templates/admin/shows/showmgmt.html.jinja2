@@ -33,7 +33,11 @@
             <tr>
               <th scope="row">{{ show.show_id }}</th>
               <td>{{ show.show_name }}</td>
-              <td style="max-width: 10rem;">{{ show.venue_name }}</td>
+              <td style="max-width: 10rem;">
+                {% for venue in venues%}
+                {{venue}} <br />
+                {% endfor %}
+              </td>
               <td>Rs. {{ show.ticket_price }}</td>
               <td>{{ show.premiere_date }}</td>
               <td>{{ show.rating }}</td>

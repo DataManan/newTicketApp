@@ -32,6 +32,11 @@ class Shows(db.Model):
     show_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     show_name = db.Column(db.String, nullable=False)
     ticket_price = db.Column(db.Numeric(precision=2, scale=1), nullable=False)
+    premiere_date = db.Column(DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
+                                   regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")))
+
+    end_date = db.Column(DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
+                              regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")))
     rating = db.Column(db.Numeric(precision=2, scale=1))
     tags = db.Column(db.String)
     show_description = db.Column(db.String)
@@ -42,28 +47,11 @@ class Shows(db.Model):
         return self.show_id
 
 
-# shows_in_venues = db.Table('shows_in_venues',
-#                            db.Column('show_id', db.Integer, db.ForeignKey(
-#                                'shows.show_id'), primary_key=True),
-#                            db.Column('venue_id', db.Integer, db.ForeignKey(
-#                                'venues.venue_id'), primary_key=True),
-#                            db.Column('premiere_date', DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
-#                                                            regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)"))),
-    #                            db.Column('end_date', DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
-#                                                       regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")), nullable=False),
-#                            )
 
 class ShowsInVenues(db.Model):
     __tablename__ = "shows_in_venues"
     show_id = db.Column('show_id', db.Integer, db.ForeignKey('shows.show_id'), primary_key=True)
-    venue_id = db.Column('venue_id', db.Integer, db.ForeignKey('venues.venue_id'), primary_key=True)
-
-    db.Column('premiere_date', DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
-                                    regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")), nullable=False)
-    
-    db.Column('end_date', DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
-                               regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")), nullable=False)
-    
+    venue_id = db.Column('venue_id', db.Integer, db.ForeignKey('venues.venue_id'), primary_key=True)    
     # relationss //many-one//
     venue = db.relationship(
         'Venues', backref=db.backref('shows_in_venues', lazy=True))

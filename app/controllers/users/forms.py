@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length, ValidationError
 from ..admin.admin_forms import LowercaseStringField
 from werkzeug.security import check_password_hash
-from ...models.models import User, TicketsBooked, Venues, Shows
+from ...models.models import User, TicketsBooked, Venues, Shows, ShowsInVenues
 from sqlalchemy.sql import func
 from ... import db
 
@@ -76,10 +76,12 @@ def ticket_avialable(form, field):
     else:
          raise ValidationError("Less than 1 tickets cannot be booked!")
 
-def get_venue_choices(showname):
-     venues = Shows.query.filter_by(show_name=showname).first()
-     venue_list = venues.venue_name.split(',')
-
+def get_venue_choices(show_id):
+     venues = ShowsInVenues.query.filter_by(show_id=show_id).all()
+     venue_list = []
+     for venue in venues:
+        venue_name = Venues.query.filter_by(venue_id=venue.venue_id).first()
+        venue_list.append(venue_name.venue_name)
      venue_choices = [(venue) for venue in venue_list]
      return venue_choices
 

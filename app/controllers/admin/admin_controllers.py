@@ -118,7 +118,15 @@ admin_apis.add_resource(ShowAPI, '/api/v1/shows/<int:show_id>')
 @login_required
 def show_mgmt():
     shows = Shows.query.all()
-    return render_template("admin/shows/showmgmt.html.jinja2", shows=shows)
+    venues = []
+    for show in shows:
+        venue_shows = ShowsInVenues.query.filter_by(show_id=show.show_id).all()
+        current_app.logger.info(venue_shows)
+        for venue_show in venue_shows:
+            venue = Venues.query.filter_by(venue_id=venue_show.venue_id).first()
+            venues.append(str(venue.venue_name))
+    current_app.logger.info(venues)
+    return render_template("admin/shows/showmgmt.html.jinja2", shows=shows, venues=venues)
 
 
 @admin_controls.route("/add_show", methods=['GET', 'POST'])
@@ -128,8 +136,7 @@ def add_show():
     addshow_form = ShowForm()
     addshow_form.venues.choices = [(venue.venue_name)
                                    for venue in Venues.query.all()]
-    if addshow_form.validate_on_submit():
-        # venue_name = ",".join(addshow_form.venue_name.data)
+    if addshow_form.validate_on_submit():   
 
         poster = addshow_form.poster_file.data
         postername = secure_filename(poster.filename)
@@ -138,6 +145,8 @@ def add_show():
         new_show = Shows(
             show_name=addshow_form.show_name.data,
             ticket_price=addshow_form.ticket_price.data,
+            premiere_date=addshow_form.premiere_date.data,
+            end_date=addshow_form.end_date.data,
             rating=addshow_form.rating.data,
             tags=addshow_form.tags.data,
             show_description=addshow_form.show_description.data,
@@ -151,7 +160,7 @@ def add_show():
             venue = Venues.query.filter_by(venue_name=venue_name).first()
             new_show_in_venue = ShowsInVenues(
                 show_id=new_show.show_id,
-                venue_id=venue.venue_id
+                venue_id=venue.venue_id,
             )
             db.session.add(new_show_in_venue)
             db.session.commit()
@@ -216,6 +225,7 @@ def edit_show(show_id):
 
             # current_app.logger.info(venue_id)
             current_app.logger.info("venue.venue_id")
+
             current_app.logger.info(venue.venue_id)
             # if venue_id != venue.venue_id:
                 # rows_to_delete = ShowsInVenues.query.filter_by(
