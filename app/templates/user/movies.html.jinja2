@@ -1,7 +1,7 @@
 <div class="col m-2 card movies__card" style="width: 12.99rem">
-  {% if show.show_poster %}
+  {% if show.poster_filename %}
   <img
-    src="static/images/{{ show.show_poster }}"
+    src="static/images/{{ show.poster_filename }}"
     alt="{{ show.show_name }}"
     class="card-img-top movie__poster"
     method="GET"

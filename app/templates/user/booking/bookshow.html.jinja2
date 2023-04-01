@@ -29,7 +29,7 @@
           {{ show.show_poster }}
           <!-- GET /static/images/%7B%7Bshow.poster_filename%7D%7D HTTP/1.1" 404 -->
           <img
-            src= "static/images/{{ show.show_poster }}"
+            src= "../../../static/images/{{show.poster_filename}}"
             alt="{{ show.show_name }}"
             class="card-img-top show--poster"
           />
