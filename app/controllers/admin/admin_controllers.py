@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from ... import db, csrf
 import os
 from flask_bootstrap import Bootstrap
-from ...models.models import Venues, Shows, User, ShowsInVenues
+from ...models.models import TicketsBooked, Venues, Shows, User, ShowsInVenues
 from .admin_forms import VenueForm, ShowForm
 from werkzeug.utils import secure_filename
 from flask_restful import Api
@@ -136,35 +136,38 @@ def add_show():
     addshow_form = ShowForm()
     addshow_form.venues.choices = [(venue.venue_name)
                                    for venue in Venues.query.all()]
-    if addshow_form.validate_on_submit():   
+    try:
+        if addshow_form.validate_on_submit():   
 
-        poster = addshow_form.poster_file.data
-        postername = secure_filename(poster.filename)
-        if poster:
-            poster.save(os.path.join('app/static/images', postername))
-        new_show = Shows(
-            show_name=addshow_form.show_name.data,
-            ticket_price=addshow_form.ticket_price.data,
-            premiere_date=addshow_form.premiere_date.data,
-            end_date=addshow_form.end_date.data,
-            rating=addshow_form.rating.data,
-            tags=addshow_form.tags.data,
-            show_description=addshow_form.show_description.data,
-            cast=addshow_form.cast.data,
-            poster_filename=postername
-        )
-
-        db.session.add(new_show)
-        db.session.commit()
-        for venue_name in addshow_form.venues.data:
-            venue = Venues.query.filter_by(venue_name=venue_name).first()
-            new_show_in_venue = ShowsInVenues(
-                show_id=new_show.show_id,
-                venue_id=venue.venue_id,
+            poster = addshow_form.poster_file.data
+            postername = secure_filename(poster.filename)
+            if poster:
+                poster.save(os.path.join('app/static/images', postername))
+            new_show = Shows(
+                show_name=addshow_form.show_name.data,
+                ticket_price=addshow_form.ticket_price.data,
+                premiere_date=addshow_form.premiere_date.data,
+                end_date=addshow_form.end_date.data,
+                rating=addshow_form.rating.data,
+                tags=addshow_form.tags.data,
+                show_description=addshow_form.show_description.data,
+                cast=addshow_form.cast.data,
+                poster_filename=postername
             )
-            db.session.add(new_show_in_venue)
+
+            db.session.add(new_show)
             db.session.commit()
-        return redirect(url_for("admin_controllers.show_mgmt"))
+            for venue_name in addshow_form.venues.data:
+                venue = Venues.query.filter_by(venue_name=venue_name).first()
+                new_show_in_venue = ShowsInVenues(
+                    show_id=new_show.show_id,
+                    venue_id=venue.venue_id,
+                )
+                db.session.add(new_show_in_venue)
+                db.session.commit()
+            return redirect(url_for("admin_controllers.show_mgmt"))
+    except:
+        db.session.rollback()
     return render_template("admin/shows/addshowform.html.jinja2", form=addshow_form)
 
 
@@ -176,63 +179,77 @@ def edit_show(show_id):
     form = ShowForm(obj=show)
     form.venues.choices = [(venue.venue_name)
                            for venue in Venues.query.all()]
-    if form.validate_on_submit():
-        poster = form.poster_file.data
-        postername = secure_filename(poster.filename)
-        if poster:
+    try:
+        if form.validate_on_submit():
+            poster = form.poster_file.data
+            postername = secure_filename(poster.filename)
+            if poster:
 
-            poster.save(os.path.join('app/static/images', postername))
-        form.populate_obj(show)
-        # show.venue_name = ",".join(form.venue_name.data)
-        show.poster_filename = postername
+                poster.save(os.path.join('app/static/images', postername))
+            form.populate_obj(show)
+            # show.venue_name = ",".join(form.venue_name.data)
+            show.poster_filename = postername
 
-        db.session.commit()
-        venue_id_list = [show_in_venue.venue_id for show_in_venue in ShowsInVenues.query.filter_by(show_id=show.show_id)]
-        """venue_id_list is the list of all venues that were allocated while creating the show"""
-       
+            db.session.commit()
+            venue_id_list = [show_in_venue.venue_id for show_in_venue in ShowsInVenues.query.filter_by(show_id=show.show_id)]
+            """venue_id_list is the list of all venues that were allocated while creating the show"""
+        
 
-        venue_ids = [] 
-        """A list of all venues that admin is passing through the edit show form"""
-        for venue_name in form.venues.data:
-            venue = Venues.query.filter_by(venue_name=venue_name).first()
-            venue_ids.append(venue.venue_id) # appends all the venue_id in venue_ids
+            venue_ids = [] 
+            """A list of all venues that admin is passing through the edit show form"""
+            for venue_name in form.venues.data:
+                venue = Venues.query.filter_by(venue_name=venue_name).first()
+                venue_ids.append(venue.venue_id) # appends all the venue_id in venue_ids
 
 
-        for venue_name in form.venues.data: # venues passed by user
-            
-            venue = Venues.query.filter_by(venue_name=venue_name).first()
-            for venue_id in venue_id_list:
-               
-                if venue_id not in venue_ids:
-                    row_to_delete = ShowsInVenues.query.filter_by(show_id=show.show_id, venue_id=venue_id).first()
-                    
-                    if row_to_delete:
-                        db.session.delete(row_to_delete)
-                        db.session.commit()
-                        break
-            if venue.venue_id not in venue_id_list:
-                new_show_in_venue = ShowsInVenues(
-                    show_id=show.show_id,
-                    venue_id=venue.venue_id
-                )
-                db.session.add(new_show_in_venue)
-                db.session.commit()
-                venue_id_list.append(venue.venue_id)
-        return redirect(url_for('admin_controllers.show_mgmt'))
+            for venue_name in form.venues.data: # venues passed by user
+                
+                venue = Venues.query.filter_by(venue_name=venue_name).first()
+                for venue_id in venue_id_list:
+                
+                    if venue_id not in venue_ids:
+                        row_to_delete = ShowsInVenues.query.filter_by(show_id=show.show_id, venue_id=venue_id).first()
+                        
+                        if row_to_delete:
+                            db.session.delete(row_to_delete)
+                            db.session.commit()
+                            break
+                if venue.venue_id not in venue_id_list:
+                    new_show_in_venue = ShowsInVenues(
+                        show_id=show.show_id,
+                        venue_id=venue.venue_id
+                    )
+                    db.session.add(new_show_in_venue)
+                    db.session.commit()
+                    venue_id_list.append(venue.venue_id)
+            return redirect(url_for('admin_controllers.show_mgmt'))
+        
+    except:
+        db.session.rollback()
 
     return render_template('admin/shows/edit_show.html.jinja2', form=form, show=show)
 
 
-@admin_controls.route('/delete_show/<int:show_id>', methods=['DELETE', 'POST'])
+@admin_controls.route('/delete_show/<int:show_id>', methods=['GET', 'POST'])
 @admin_required
 @login_required
 @csrf.exempt
 def delete_show(show_id):
-    show = Shows.query.get_or_404(show_id)
-    delete_rows = ShowsInVenues.query.filter_by(show_id=show_id).all()
-    for row in delete_rows:
-        db.session.delete(row)
+    try:
+        show = Shows.query.get_or_404(show_id)
+        delete_rows = ShowsInVenues.query.filter_by(show_id=show_id).all()
+        delete_bookings = TicketsBooked.query.filter_by(showname=show.show_name).all()
+        if delete_bookings:
+            for booking in delete_bookings:
+                db.session.delete(booking)
+                db.session.commit()
+        if delete_rows:
+            for row in delete_rows:
+                db.session.delete(row)
+                db.session.commit()
+        db.session.delete(show)
         db.session.commit()
-    db.session.delete(show)
-    db.session.commit()
-    return redirect(url_for('admin_controllers.show_mgmt'))
+    except:
+        db.session.rollback()
+    finally:
+        return redirect(url_for('admin_controllers.show_mgmt'))

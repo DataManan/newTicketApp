@@ -30,7 +30,7 @@ class Shows(db.Model):
     __tablename__ = "shows"
     __searchable__ = ['show_name', 'rating', 'tags', 'cast']
     show_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    show_name = db.Column(db.String, nullable=False)
+    show_name = db.Column(db.String, nullable=False, unique=True)
     ticket_price = db.Column(db.Numeric(precision=3, scale=2), nullable=False)
     premiere_date = db.Column(DATE(storage_format="%(day)02d/%(month)02d/%(year)04d",
                                    regexp=re.compile("(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)")))

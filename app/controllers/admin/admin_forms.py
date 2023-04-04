@@ -46,6 +46,10 @@ def validate_venue_name(self, venue_name):
     if not venue:
         raise ValidationError('Invalid venue name.')
 
+def validate_show_name(form, field):
+    show = Shows.query.filter_by(show_name=field.data).first()
+    if show:
+        raise ValidationError("show with same name already exists")
 
 class ShowForm(FlaskForm):
 
