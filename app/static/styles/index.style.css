@@ -97,8 +97,9 @@ Movies
         font-size: 3.55rem;
     }
     .container--movies{
-        padding: 2.5rem;
-        margin: 1rem auto;
+        padding: 1rem;
+        margin: 2.5rem 5rem;
+        /* display: grid; */
     }
     /* //////////
     movie card 
@@ -109,21 +110,22 @@ Movies
             background: var(--clr-primary-3);
             color: var(--clr-primary-5);
             padding: 0;
-            max-width: 20rem;
+            max-width: 15rem;
         }
         
         .movie__body{
             text-align: center;
         }
         .movie__title {
-            font-weight: 600;
+            font-weight: var(--w-regular);
             margin: auto;
             font-size: 1.5rem;
+            text-transform: capitalize;
         }
         .movie__poster{
             box-shadow:0 5px 100px 5px rgba(243, 243, 243, 0.5);
-            /* max-width: 12rem; */
-            max-height: 15rem;
+            /* max-width: 1rem; */
+            max-height: 20rem;
         }
         .movies__btn{
             margin: 0rem auto 1rem auto;

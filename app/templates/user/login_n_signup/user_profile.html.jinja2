@@ -1,22 +1,48 @@
-{% extends "base.html.jinja2" %}
+{% extends "user/base.html.jinja2" %}
 
 {% block content %}
-    <h1>The is user profile page</h1>
-    <div class="container">
-        
+    
+    <div class="container m-5">
+        <h1>User's profile</h1>
         <h3>
-            {{user.first_name}} {{user.last_name}}
+            First Name : {{user.first_name}} 
+            <br />
+            Last Name : {{user.last_name}}
         </h3>
         <h3>
-            {{user.username}}
+            Username : {{user.username}}
         </h3>
         <h3>
-            {{user.email}}
+            email address : {{user.email}}
         </h3>
 
         <h3>
-            admin status : {{user.isadmin}}
+            Tickets Booked
         </h3>
-        
+        <div>
+            <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Show name</th>
+                    <th scope="col">Venue Name</th>
+                    <th scope="col">Total tickets</th>
+                    <th scope="col">Show date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in tickets_booked %}
+                <tr>
+                    <th scope="row">{{booking.username}}</th>
+                    <td>{{booking.showname}}</td>
+                    <td>{{booking.venuename}}</td>
+                    <td>{{booking.totalticket}}</td>
+                    <td>{{booking.reservation_date}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <a href="/" class="btn btn-secondary">Go To Home !</a>
     </div>
 {% endblock content %}

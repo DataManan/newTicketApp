@@ -58,9 +58,12 @@ def booknow(show_id):
 def get_user_profile():
     # user = User.query.get_or_404(current_user.user_id)
     userdata = {
+
         "username": current_user.username,
-        "first name": current_user.first_name,
-        "last name": current_user.last_name,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
         "email": current_user.email
     }
-    return jsonify(userdata)
+    tickets_booked = TicketsBooked.query.filter_by(username=current_user.username)
+    # app/templates/user/login_n_signup/user_profile.html.jinja2
+    return render_template("user/login_n_signup/user_profile.html.jinja2", user=userdata, tickets_booked=tickets_booked)

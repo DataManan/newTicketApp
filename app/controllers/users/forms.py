@@ -1,7 +1,7 @@
 from datetime import date
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length, ValidationError, NumberRange
 from ..admin.admin_forms import LowercaseStringField
 from werkzeug.security import check_password_hash
 from ...models.models import User, TicketsBooked, Venues, Shows, ShowsInVenues
@@ -100,7 +100,7 @@ class BookShowForm(FlaskForm):
     showname=LowercaseStringField("Show name", validators=[InputRequired()])
     # For each Show, venuename gives options for the user to select one of the given venues
     venuename = SelectField("venue name", choices=[], validators=[InputRequired()])
-    totaltickets=IntegerField("Total tickets", validators=[InputRequired(), ticket_avialable])
+    totaltickets=IntegerField("Total tickets", validators=[InputRequired(), NumberRange(min=1),ticket_avialable])
     show_date = DateField("Date of reservation", validators=[InputRequired()])
 
 

@@ -15,11 +15,31 @@
         <h1 class="display-1 ">
             booking successFull
         </h1>
-        {{booking.username}}
-        {{booking.showname}}
-        {{booking.venuename}}
-        {{booking.totalticket}}
-        {{booking.show_date}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Show name</th>
+                    <th scope="col">Venue Name</th>
+                    <th scope="col">Total tickets</th>
+                    <th scope="col">Show date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">{{booking.username}}</th>
+                    <td>{{booking.showname}}</td>
+                    <td>{{booking.venuename}}</td>
+                    <td>{{booking.totalticket}}</td>
+                    <td>{{booking.reservation_date}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        
+        
+        
         <a href="/" class="btn btn-primary">GO TO HOME</a>
     </div>
 </body>
