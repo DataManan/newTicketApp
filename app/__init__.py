@@ -33,7 +33,6 @@ def create_app():
     app.register_blueprint(fts, prefix='/search')
 
     bootstrap.init_app(app)
-    # app.logger.info(LocalDevelopmentConfig.SQLITE_DB_DIR)
 
     app.app_context().push()
     create_database(app)

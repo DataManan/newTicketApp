@@ -121,13 +121,11 @@ def show_mgmt():
     venues = {}
     for show in shows:
         venue_shows = ShowsInVenues.query.filter_by(show_id=show.show_id).all()
-        current_app.logger.info(venue_shows)
         venues[show.show_id] = []
         for venue_show in venue_shows:
             venue = Venues.query.filter_by(venue_id=venue_show.venue_id).first()
             venues[show.show_id].append(venue.venue_name)
-            current_app.logger.info(venues[show.show_id])
-    current_app.logger.info(venues)
+           
     return render_template("admin/shows/showmgmt.html.jinja2", shows=shows, venues=venues)
 
 
@@ -191,8 +189,7 @@ def edit_show(show_id):
         db.session.commit()
         venue_id_list = [show_in_venue.venue_id for show_in_venue in ShowsInVenues.query.filter_by(show_id=show.show_id)]
         """venue_id_list is the list of all venues that were allocated while creating the show"""
-        current_app.logger.info("venue_id_list")
-        current_app.logger.info(venue_id_list)
+       
 
         venue_ids = [] 
         """A list of all venues that admin is passing through the edit show form"""
@@ -203,15 +200,12 @@ def edit_show(show_id):
 
         for venue_name in form.venues.data: # venues passed by user
             
-            current_app.logger.info("venue_ids")
-            current_app.logger.info(venue_ids)
             venue = Venues.query.filter_by(venue_name=venue_name).first()
             for venue_id in venue_id_list:
-                current_app.logger.info(venue_id)
-                current_app.logger.info(venue.venue_id)
+               
                 if venue_id not in venue_ids:
                     row_to_delete = ShowsInVenues.query.filter_by(show_id=show.show_id, venue_id=venue_id).first()
-                    current_app.logger.info(row_to_delete)
+                    
                     if row_to_delete:
                         db.session.delete(row_to_delete)
                         db.session.commit()
@@ -224,28 +218,6 @@ def edit_show(show_id):
                 db.session.add(new_show_in_venue)
                 db.session.commit()
                 venue_id_list.append(venue.venue_id)
-
-            # current_app.logger.info(venue_id)
-            current_app.logger.info("venue.venue_id")
-
-            current_app.logger.info(venue.venue_id)
-            # if venue_id != venue.venue_id:
-                # rows_to_delete = ShowsInVenues.query.filter_by(
-                #     show_id=show_id, venue_id=venue_id)
-                # db.session.delete(rows_to_delete)
-                # db.session.commit()
-
-            # if venue_id != venue.venue_id:
-            #     new_show_in_venue = ShowsInVenues(
-            #         show_id=show.show_id,
-            #         venue_id=venue.venue_id
-            #     )
-            #         db.session.add(new_show_in_venue)
-            #         db.session.commit()
-
-                
-                    
-
         return redirect(url_for('admin_controllers.show_mgmt'))
 
     return render_template('admin/shows/edit_show.html.jinja2', form=form, show=show)
