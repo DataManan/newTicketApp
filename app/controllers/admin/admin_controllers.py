@@ -92,12 +92,22 @@ def edit_venue(venue_id):
 def delete_venue(venue_id):
     try:
         venue = Venues.query.get_or_404(venue_id)
+        delete_rows = ShowsInVenues.query.filter_by(venue_id=venue_id).all()
+        delete_bookings = TicketsBooked.query.filter_by(venuename=venue.venue_name).all()
+        
+        if delete_bookings:
+            for booking in delete_bookings:
+                db.session.delete(booking)
+                db.session.commit()
+        if delete_rows:
+            for row in delete_rows:
+                db.session.delete(row)
+                db.session.commit()
         db.session.delete(venue)
         db.session.commit()
-
-        return redirect(url_for('admin_controllers.venue_mgmt'))
     except:
         db.session.rollback()
+    finally:
         return redirect(url_for('admin_controllers.venue_mgmt'))
 
 

@@ -56,11 +56,8 @@
               <!-- <button class="btn btn-primary">Add Show</button> -->
               <!-- <a class="btn btn-outline-warning" href="add_shows_in_venue/{{ venue.venue_id }}">Add Show</a> -->
               <a class="btn btn-outline-warning" href="edit_venue/{{ venue.venue_id }}">Edit Venue</a>
-              <form action="{{ url_for('admin_controllers.delete_venue', venue_id=venue.venue_id) }}" method="POST" class="col">
-                
-                    <input type="hidden" name="_method" value="DELETE" />
-                    <span class="d-none">{{ csrf_token() }}</span>
-                    
+              <form action="{{ url_for('admin_controllers.delete_venue', venue_id=venue.venue_id) }}" method="POST" class="col">                
+                    <input type="hidden" name="_method" value="DELETE" />                    
                     <button type="submit" class="btn btn-outline-danger">
                       Delete
                     </button>
