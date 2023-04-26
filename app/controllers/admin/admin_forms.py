@@ -36,7 +36,7 @@ class VenueForm(FlaskForm):
         'City', validators=[InputRequired(), Length(min=3, max=256)])
     state = LowercaseStringField(
         'state', validators=[InputRequired(), Length(min=3, max=256)])
-    tags = LowercaseStringField('tags', validators=[InputRequired()])
+    venue_tags = LowercaseStringField('tags', validators=[InputRequired()])
 
 # custom validator to check is venue name exist in databse
 
